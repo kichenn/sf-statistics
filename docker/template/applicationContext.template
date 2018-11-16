@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:spring-beans-4.3.xsd
+                           http://www.springframework.org/schema/context classpath:spring-context-4.3.xsd">
+
+    <bean id="emotibotDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName">
+            <value>com.mysql.cj.jdbc.Driver</value>
+        </property>
+        <property name="url" value="${EC_MYSQL_EMOTIBOT_URL}"/>
+        <property name="username" value="${EC_MYSQL_EMOTIBOT_USERNAME}"/>
+        <property name="password" value="${EC_MYSQL_EMOTIBOT_PASSWORD}"/>
+        <property name="initialSize" value="${EC_MYSQL_EMOTIBOT_INITIALSIZE}"/>
+        <property name="minIdle" value="${EC_MYSQL_EMOTIBOT_MINIDLE}"/>
+        <property name="maxIdle" value="${EC_MYSQL_EMOTIBOT_MAXIDLE}"/>
+        <property name="maxTotal" value="${EC_MYSQL_EMOTIBOT_MAXTOTAL}"/>
+    </bean>
+    <bean id="emotibotJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="emotibotDataSource"></property>
+    </bean>
+    <bean id="backendLogDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName">
+            <value>com.mysql.cj.jdbc.Driver</value>
+        </property>
+
+        <property name="url" value="${EC_MYSQL_BACKEND_LOG_URL}"/>
+        <property name="username" value="${EC_MYSQL_BACKEND_LOG_USERNAME}"/>
+        <property name="password" value="${EC_MYSQL_BACKEND_LOG_PASSWORD}"/>
+        <property name="initialSize" value="${EC_MYSQL_BACKEND_LOG_INITIALSIZE}"/>
+        <property name="minIdle" value="${EC_MYSQL_BACKEND_LOG_MINIDLE}"/>
+        <property name="maxIdle" value="${EC_MYSQL_BACKEND_LOG_MAXIDLE}"/>
+        <property name="maxTotal" value="${EC_MYSQL_BACKEND_LOG_MAXTOTAL}"/>
+    </bean>
+    <bean id="backendLogJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="backendLogDataSource"></property>
+    </bean>
+
+    <bean id="robotSyncDao" class="dao.RobotSyncImp">
+        <property name="jdbcTemplate" ref="emotibotJdbcTemplate"></property>
+    </bean>
+    <bean id="appidSyncDao" class="dao.AppidSyncImp">
+        <property name="jdbcTemplate" ref="emotibotJdbcTemplate"></property>
+    </bean>
+    <bean id="backendLogDao" class="dao.BackendLogImp">
+        <property name="jdbcTemplate" ref="backendLogJdbcTemplate"></property>
+    </bean>
+    <bean id="sessionLogDao" class="dao.SessionLogImp">
+        <property name="jdbcTemplate" ref="backendLogJdbcTemplate"></property>
+    </bean>
+</beans>
