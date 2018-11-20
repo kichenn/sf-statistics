@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY docker ./docker
 COPY entrypoint.sh .
 COPY config ./config
-COPY target/*.jar .
+COPY target/sf-statistics*with-dependencies.jar .
 
 
 # Entrypoint that reads the shell ENV variables as config flags

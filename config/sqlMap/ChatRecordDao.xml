@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.IChatRecordDao">
+
+    <resultMap id="ChatRecordMapping" type="ChatRecordEntity">
+        <id column="id" property="id" javaType="long"/>
+        <result column="app_id" property="appId" javaType="String"/>
+        <result column="user_id" property="userId" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="StaticRecordMapping" type="StaticRecordDto">
+        <id column="channel_id" property="channelId" javaType="String"/>
+        <result column="bquestion" property="bQuestion" javaType="String"/>
+        <result column="answer_id" property="answerId" javaType="String"/>
+        <result column="visitCnt" property="visitCnt" javaType="String"/>
+        <result column="solvedCnt" property="solvedCnt" javaType="long"/>
+        <result column="unSolvedCnt" property="unSolvedCnt" javaType="long"/>
+        <result column="reason" property="reason" javaType="String"/>
+        <result column="reasonCnt" property="reasonCnt" javaType="long"/>
+    </resultMap>
+
+
+    <select id="queryChatRecordAll" resultType="ChatRecordEntity" resultMap="ChatRecordMapping">
+        SELECT * from chat_record
+    </select>
+
+
+    <select id="queryStaticRecordInfo" parameterType="Map" resultType="StaticRecordDto" resultMap="StaticRecordMapping">
+        select
+        channel_id ,bquestion,answer_id,sum(case qa_solved when 0 then 1 when 1 then 1 else 0 end) as visitCnt,
+        sum( case qa_solved when 0 then 1 else 0 end ) as unSolvedCnt,
+        sum( case qa_solved when 1 then 1 else 0 end ) as solvedCnt
+        from static_record_info
+        where 1=1
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channel_id in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channel_id,bquestion,answer_id order by channel_id, visitCnt desc,answer_id ;
+    </select>
+
+    <select id="queryStaticRecordReasonInfo" parameterType="Map" resultType="StaticRecordDto"
+            resultMap="StaticRecordMapping">
+        select
+        channel_id ,bquestion,answer_id,reason,count(id) reasonCnt
+        from static_record_info
+        where 1=1 and reason != ''
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channel_id in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channel_id,bquestion,answer_id,reason;
+    </select>
+
+
+    <select id="queryTotalSession" parameterType="Map" resultType="CoreReportBean">
+        select channelId, count(distinct session_id) as totalSessionNum
+        from chat_record where 1=1
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId;
+    </select>
+
+    <select id="queryValidSession" parameterType="Map" resultType="CoreReportBean">
+        select channelId, count(distinct session_id) as validSessionNum
+        from chat_record
+        where user_q != 'welcome_tag'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId
+    </select>
+
+
+    <select id="queryValidBusinessSession" parameterType="Map" resultType="CoreReportBean">
+        select channelId, count(distinct session_id) as validBusinessSessionNum
+        from chat_record
+        where user_q != 'welcome_tag' and module = 'faq'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId
+    </select>
+
+
+    <select id="queryAcsSession" parameterType="Map" resultType="CoreReportBean">
+        select channelId, count(distinct session_id) as acsSessionNum from chat_record where module = 'ACS'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId
+    </select>
+
+    <select id="queryTotalSessionMoreThanOne" parameterType="Map" resultType="CoreReportBean">
+        select channelId, count(distinct session_id) as totalSessionMoreThanOneNum
+        from chat_record where user_q != 'welcome_tag' and module = 'ACS'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId
+    </select>
+
+    <select id="queryInterActRound" parameterType="Map" resultType="CoreReportBean">
+        select channelId,count(id)/count(distinct session_id) as interactRound
+        from chat_record
+        where user_q != 'welcome_tag'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId
+    </select>
+
+    <select id="queryAverageConversionTime" parameterType="Map" resultType="CoreReportBean">
+        select a.channelId, sum(a.conversionTime)/count(session_id) as averageConversionTime from
+        (select channelId,session_id , timestampdiff(second,min(created_time), (max(created_time))) as conversionTime
+        from chat_record where 1=1
+        -- where user_q != 'welcome_tag'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId,session_id) a
+
+        group by a.channelId
+    </select>
+
+    <select id="calRoundNumReport" parameterType="Map" resultType="RoundNumReportPo">
+        select a.channelId channelId,a.acsType acsType,a.cnt roundNum,count(a.session_id) roundNumCnt
+        from (
+        select channelId,session_id, case when count(id) > 10 then 11 else count(id) end as cnt,
+        case when sum(case when module = 'ACS' then 1 else 0 end) > 0 then 'M'
+        else 'NM' end as acsType
+        from chat_record
+        where user_q != 'welcome_tag'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId,session_id
+        ) a
+        group by a.channelId,a.acsType,a.cnt;
+    </select>
+
+
+    <select id="hourSessionReport" parameterType="Map" resultType="HourSessionReportPo">
+        select b.channelId ,b.acsType
+        ,sum(if(b.hourtime != -1,b.cid,null)) as 'hday'
+        ,sum(if(b.hourtime=0,b.cid,null)) as 'h1'
+        ,sum(if(b.hourtime=1,b.cid,null)) as 'h2'
+        ,sum(if(b.hourtime=2,b.cid,null)) as 'h3'
+        ,sum(if(b.hourtime=3,b.cid,null)) as 'h4'
+        ,sum(if(b.hourtime=4,b.cid,null)) as 'h5'
+        ,sum(if(b.hourtime=5,b.cid,null)) as 'h6'
+        ,sum(if(b.hourtime=6,b.cid,null)) as 'h7'
+        ,sum(if(b.hourtime=7,b.cid,null)) as 'h8'
+        ,sum(if(b.hourtime=8,b.cid,null)) as 'h9'
+        ,sum(if(b.hourtime=9,b.cid,null)) as 'h10'
+        ,sum(if(b.hourtime=10,b.cid,null)) as 'h11'
+        ,sum(if(b.hourtime=11,b.cid,null)) as 'h12'
+        ,sum(if(b.hourtime=12,b.cid,null)) as 'h13'
+        ,sum(if(b.hourtime=13,b.cid,null)) as 'h14'
+        ,sum(if(b.hourtime=14,b.cid,null)) as 'h15'
+        ,sum(if(b.hourtime=15,b.cid,null)) as 'h16'
+        ,sum(if(b.hourtime=16,b.cid,null)) as 'h17'
+        ,sum(if(b.hourtime=17,b.cid,null)) as 'h18'
+        ,sum(if(b.hourtime=18,b.cid,null)) as 'h19'
+        ,sum(if(b.hourtime=19,b.cid,null)) as 'h20'
+        ,sum(if(b.hourtime=20,b.cid,null)) as 'h21'
+        ,sum(if(b.hourtime=21,b.cid,null)) as 'h22'
+        ,sum(if(b.hourtime=22,b.cid,null)) as 'h23'
+        ,sum(if(b.hourtime=23,b.cid,null)) as 'h24'
+        from
+        (
+        select a.channelId,a.acsType, a.hourtime,count( a.session_id) as cid from
+        (
+        select channelId,session_id,hour(min(created_time)) as hourtime,
+        case when  sum(case when module = 'ACS' then 1 else 0 end) > 0 then 'M'
+        else 'NM' end as acsType
+        from chat_record
+        where user_q != 'welcome_tag'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId,session_id
+        ) a
+        group by a.channelId ,a.acsType,a.hourtime
+        ) b
+        group by b.channelId,b.acsType
+        ;
+    </select>
+
+
+    <select id="dialogueTimeReport" parameterType="Map" resultType="DialogueTimeReportPo">
+        select c.channelId,c.acsType
+        ,sum(if(c.duringSecond != -1,c.sidcnt,null)) as 'sall'
+        ,sum(if(c.duringSecond=5,c.sidcnt,null)) as 's5'
+        ,sum(if(c.duringSecond=10,c.sidcnt,null)) as 's10'
+        ,sum(if(c.duringSecond=15,c.sidcnt,null)) as 's15'
+        ,sum(if(c.duringSecond=20,c.sidcnt,null)) as 's20'
+        ,sum(if(c.duringSecond=25,c.sidcnt,null)) as 's25'
+        ,sum(if(c.duringSecond=30,c.sidcnt,null)) as 's30'
+        ,sum(if(c.duringSecond=35,c.sidcnt,null)) as 's35'
+        ,sum(if(c.duringSecond=40,c.sidcnt,null)) as 's40'
+        ,sum(if(c.duringSecond=45,c.sidcnt,null)) as 's45'
+        ,sum(if(c.duringSecond=50,c.sidcnt,null)) as 's50'
+        ,sum(if(c.duringSecond=55,c.sidcnt,null)) as 's55'
+        ,sum(if(c.duringSecond=60,c.sidcnt,null)) as 's60'
+        ,sum(if(c.duringSecond=61,c.sidcnt,null)) as 's61'
+        from
+        (
+        select b.channelId,b.acsType,b.duringSecond,count(b.session_id) as sidcnt from
+        (
+        select a.channelId,a.session_id,
+        case when  sum(case when a.module = 'ACS' then 1 else 0 end) > 0 then 'M'
+        else 'NM' end as acsType,
+        case
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))  <![CDATA[  <= ]]>   5 then 5
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))   <![CDATA[  <= ]]>   10 then 10
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))    <![CDATA[  <= ]]>   15 then 15
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))   <![CDATA[  <= ]]>   20 then 20
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))    <![CDATA[  <= ]]>   25 then 25
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))   <![CDATA[  <= ]]>    30 then 30
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))   <![CDATA[  <= ]]>   35 then 35
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))   <![CDATA[  <= ]]>     40 then 40
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))    <![CDATA[  <= ]]>   45 then 45
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))   <![CDATA[  <= ]]>   50 then 50
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))   <![CDATA[  <= ]]>   55 then 55
+        when timestampdiff(second,min(a.created_time),(max(a.created_time)))    <![CDATA[  <= ]]>   60 then 60
+        else 61 end as 'duringSecond'
+        from chat_record a
+        where a.user_q != 'welcome_tag'
+        <if test="beginDate != null">
+            and a.created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and a.created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and a.channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by a.channelId,a.session_id
+        ) b
+        group by b.channelId,b.acsType,b.duringSecond
+        ) c
+        group by c.channelId,c.acsType
+        ;
+    </select>
+
+
+    <select id="faqIndexTotalRoundReport" parameterType="Map" resultType="FaqIndexReportDto">
+        select channelId,count(id) totalRound from chat_record
+        where user_q != 'welcome_tag'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId;
+    </select>
+
+
+    <select id="faqIndexMissReport" parameterType="Map" resultType="FaqIndexReportDto">
+        select channelId,count(id) faqMissNum from chat_record
+        where user_q != 'welcome_tag'
+        and module = 'backfill'
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId;
+    </select>
+
+    <select id="faqIndexDirectReport" parameterType="Map" resultType="FaqIndexReportDto">
+        select channelId,count(id) directAnswerNum
+        from chat_record
+        where user_q != 'welcome_tag'
+        and module = 'faq' and score >= #{faqThreshold0}
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId;
+    </select>
+
+    <select id="faqIndexRecommendReport" parameterType="Map" resultType="FaqIndexReportDto">
+        select channelId,count(id) recommendAnswerNum
+        from chat_record
+        where user_q != 'welcome_tag' and module = 'faq' and score <![CDATA[  < ]]> #{faqThreshold0} and score >=
+        #{faqThreshold2}
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channelId in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
+        group by channelId;
+    </select>
+</mapper>

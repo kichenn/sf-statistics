@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:spring-beans-4.3.xsd
                            http://www.springframework.org/schema/context classpath:spring-context-4.3.xsd">
 
-    <bean id="emotibotDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-        <property name="driverClassName">
-            <value>com.mysql.cj.jdbc.Driver</value>
-        </property>
-        <property name="url" value="${EC_MYSQL_EMOTIBOT_URL}"/>
-        <property name="username" value="${EC_MYSQL_EMOTIBOT_USERNAME}"/>
-        <property name="password" value="${EC_MYSQL_EMOTIBOT_PASSWORD}"/>
-        <property name="initialSize" value="${EC_MYSQL_EMOTIBOT_INITIALSIZE}"/>
-        <property name="minIdle" value="${EC_MYSQL_EMOTIBOT_MINIDLE}"/>
-        <property name="maxIdle" value="${EC_MYSQL_EMOTIBOT_MAXIDLE}"/>
-        <property name="maxTotal" value="${EC_MYSQL_EMOTIBOT_MAXTOTAL}"/>
-    </bean>
-    <bean id="emotibotJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="emotibotDataSource"></property>
-    </bean>
     <bean id="backendLogDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName">
             <value>com.mysql.cj.jdbc.Driver</value>
@@ -32,20 +17,28 @@
         <property name="maxIdle" value="${EC_MYSQL_BACKEND_LOG_MAXIDLE}"/>
         <property name="maxTotal" value="${EC_MYSQL_BACKEND_LOG_MAXTOTAL}"/>
     </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+            <property name="dataSource" ref="backendLogDataSource" />
+            <property name="configLocation" value="classpath:myBatis/SqlMapConfig.xml" />
+        </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+            <property name="basePackage" value="dao.*" />
+            <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        </bean>
+
     <bean id="backendLogJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="backendLogDataSource"></property>
     </bean>
 
-    <bean id="robotSyncDao" class="dao.RobotSyncImp">
-        <property name="jdbcTemplate" ref="emotibotJdbcTemplate"></property>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="backendLogDataSource"></property>
     </bean>
-    <bean id="appidSyncDao" class="dao.AppidSyncImp">
-        <property name="jdbcTemplate" ref="emotibotJdbcTemplate"></property>
+
+
+    <bean id="reportDao" class="dao.ReportImp">
+            <property name="jdbcTemplate" ref="backendLogJdbcTemplate"></property>
     </bean>
-    <bean id="backendLogDao" class="dao.BackendLogImp">
-        <property name="jdbcTemplate" ref="backendLogJdbcTemplate"></property>
-    </bean>
-    <bean id="sessionLogDao" class="dao.SessionLogImp">
-        <property name="jdbcTemplate" ref="backendLogJdbcTemplate"></property>
-    </bean>
+
 </beans>
