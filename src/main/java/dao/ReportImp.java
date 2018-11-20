@@ -4,21 +4,16 @@ import com.google.gson.Gson;
 import log.LoggerFactory;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.core.Core;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import report.CoreReportBean;
 import utils.BigDecimalUtils;
 import utils.MySQLHelper;
 
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by changmin on 2018/3/7.
@@ -52,7 +47,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @param channelIdList
      * @return
      */
-    private List<CoreReportBean> calculateAverageConversionTime(String dateBegin,String dateEnd,List<String> channelIdList) {
+    private List<CoreReportBean> calculateAverageConversionTime(String dateBegin, String dateEnd, List<String> channelIdList) {
         HashMap<String,Object> req = new HashMap<String, Object>();
         req.put("beginDate",dateBegin);
         req.put("endDate",dateEnd);
@@ -68,7 +63,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @param channelIdList
      * @return
      */
-    private List<CoreReportBean> calculateInteractRound(String dateBegin,String dateEnd,List<String> channelIdList) {
+    private List<CoreReportBean> calculateInteractRound(String dateBegin, String dateEnd, List<String> channelIdList) {
         HashMap<String,Object> req = new HashMap<String, Object>();
         req.put("beginDate",dateBegin);
         req.put("endDate",dateEnd);
@@ -84,7 +79,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @param channelIdList
      * @return
      */
-    private List<CoreReportBean> calculateTotalSessionNum(String dateBegin,String dateEnd,List<String> channelIdList) {
+    private List<CoreReportBean> calculateTotalSessionNum(String dateBegin, String dateEnd, List<String> channelIdList) {
         HashMap<String,Object> req = new HashMap<String, Object>();
         req.put("beginDate",dateBegin);
         req.put("endDate",dateEnd);
@@ -93,7 +88,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
         return cnt;
     }
 
-    private List<CoreReportBean> calculateValidBusinessSession(String dateBegin,String dateEnd,List<String> channelIdList){
+    private List<CoreReportBean> calculateValidBusinessSession(String dateBegin, String dateEnd, List<String> channelIdList){
         HashMap<String,Object> req = new HashMap<String, Object>();
         req.put("beginDate",dateBegin);
         req.put("endDate",dateEnd);
@@ -197,7 +192,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
             return null;
         if (ret != null && ret.size() > 0) {
             for (CoreReportBean item : ret) {
-                if (channelId.equals(item.getChannelId()))
+                if (item != null && channelId.equals(item.getChannelId()))
                     return item;
             }
         }
@@ -209,7 +204,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @param
      * @return
      */
-    private List<CoreReportBean> calculateValidNoAcsSession(String dateBegin,String dateEnd,List<String> channelIdList) {
+    private List<CoreReportBean> calculateValidNoAcsSession(String dateBegin, String dateEnd, List<String> channelIdList) {
         HashMap<String,Object> req = new HashMap<String, Object>();
         req.put("beginDate",dateBegin);
         req.put("endDate",dateEnd);
@@ -218,7 +213,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
         return cnt;
     }
 
-    private List<CoreReportBean> calulateAcsSession(String dateBegin,String dateEnd,List<String> channelIdList) {
+    private List<CoreReportBean> calulateAcsSession(String dateBegin, String dateEnd, List<String> channelIdList) {
 
         HashMap<String,Object> req = new HashMap<String, Object>();
         req.put("beginDate",dateBegin);
@@ -229,7 +224,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
     }
 
 
-    private List<CoreReportBean> calculateValidSession(String dateBegin,String dateEnd,List<String> channelIdList) {
+    private List<CoreReportBean> calculateValidSession(String dateBegin, String dateEnd, List<String> channelIdList) {
         HashMap<String,Object> req = new HashMap<String, Object>();
         req.put("beginDate",dateBegin);
         req.put("endDate",dateEnd);

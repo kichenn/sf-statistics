@@ -67,7 +67,7 @@ public class FaqIndexApiRequest extends BaseReportRequest {
         LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(),StrUtils.printObjectJson(req) ));
 
         String title = "faqIndexReport";
-        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate)+StrUtils.randomInt(1000) +  ".xls";
+        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate)+  ".xls";
         String fileNamePath = tmpDir + "/" + fileName;
 
         File historyFile = new File(fileNamePath);

@@ -59,7 +59,7 @@ public class HourSessionReportApiRequest extends BaseReportRequest {
 
 
         String title = "hourSessionReport";
-        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) + StrUtils.randomInt(1000) + ".xls";
+        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) +  ".xls";
         String fileNamePath = tmpDir + "/" + fileName;
 
         File historyFile = new File(fileNamePath);

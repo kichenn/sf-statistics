@@ -53,10 +53,10 @@ public class DialogueTimeReportApiRequest extends BaseReportRequest {
         }
         if (!CollectionUtils.isEmpty(channelIds))
             req.put("channnelId", channelIds);
-        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(),StrUtils.printObjectJson(req) ));
+        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), StrUtils.printObjectJson(req)));
 
         String title = "dialogueTimeReport";
-        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate)+StrUtils.randomInt(1000) + ".xls";
+        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) +  ".xls";
         String fileNamePath = tmpDir + "/" + fileName;
         File historyFile = new File(fileNamePath);
         if (!historyFile.exists() || "TRUE".equals(isForceNOCache)) {

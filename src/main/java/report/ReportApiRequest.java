@@ -40,7 +40,7 @@ public class ReportApiRequest extends BaseReportRequest {
         LoggerFactory.getLogger().info(String.format("[%s] output: '%s,  %s'", this.getClass().getSimpleName(),beginDate,endDate ));
 
         String title = "coreReport";
-        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) + StrUtils.randomInt(1000) + ".xls";
+        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate)   + ".xls";
         String fileNamePath = tmpDir + "/" + fileName;
         File historyFile = new File(fileNamePath);
         if (!historyFile.exists() || "TRUE".equals(isForceNOCache)) {
