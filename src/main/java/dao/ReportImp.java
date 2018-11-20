@@ -48,11 +48,11 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @return
      */
     private List<CoreReportBean> calculateAverageConversionTime(String dateBegin, String dateEnd, List<String> channelIdList) {
-        HashMap<String,Object> req = new HashMap<String, Object>();
-        req.put("beginDate",dateBegin);
-        req.put("endDate",dateEnd);
-        req.put("channnelId",channelIdList);
-        List<CoreReportBean> cnt =  MySQLHelper.getInstance().getChatRecordDao().queryAverageConversionTime(req);
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("beginDate", dateBegin);
+        req.put("endDate", dateEnd);
+        req.put("channnelId", channelIdList);
+        List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryAverageConversionTime(req);
         return cnt;
     }
 
@@ -64,11 +64,11 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @return
      */
     private List<CoreReportBean> calculateInteractRound(String dateBegin, String dateEnd, List<String> channelIdList) {
-        HashMap<String,Object> req = new HashMap<String, Object>();
-        req.put("beginDate",dateBegin);
-        req.put("endDate",dateEnd);
-        req.put("channnelId",channelIdList);
-        List<CoreReportBean> cnt =  MySQLHelper.getInstance().getChatRecordDao().queryInterActRound(req);
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("beginDate", dateBegin);
+        req.put("endDate", dateEnd);
+        req.put("channnelId", channelIdList);
+        List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryInterActRound(req);
         return cnt;
     }
 
@@ -80,19 +80,19 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @return
      */
     private List<CoreReportBean> calculateTotalSessionNum(String dateBegin, String dateEnd, List<String> channelIdList) {
-        HashMap<String,Object> req = new HashMap<String, Object>();
-        req.put("beginDate",dateBegin);
-        req.put("endDate",dateEnd);
-        req.put("channnelId",channelIdList);
-        List<CoreReportBean> cnt =  MySQLHelper.getInstance().getChatRecordDao().queryTotalSession(req);
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("beginDate", dateBegin);
+        req.put("endDate", dateEnd);
+        req.put("channnelId", channelIdList);
+        List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryTotalSession(req);
         return cnt;
     }
 
-    private List<CoreReportBean> calculateValidBusinessSession(String dateBegin, String dateEnd, List<String> channelIdList){
-        HashMap<String,Object> req = new HashMap<String, Object>();
-        req.put("beginDate",dateBegin);
-        req.put("endDate",dateEnd);
-        req.put("channnelId",channelIdList);
+    private List<CoreReportBean> calculateValidBusinessSession(String dateBegin, String dateEnd, List<String> channelIdList) {
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("beginDate", dateBegin);
+        req.put("endDate", dateEnd);
+        req.put("channnelId", channelIdList);
         List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryValidBusinessSession(req);
         return cnt;
     }
@@ -115,23 +115,23 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
 //        }
         List<CoreReportBean> totalSessionReportBeanList = null;
         try {
-            totalSessionReportBeanList = calculateTotalSessionNum(dateBeginStr,dateEndStr,targetChannels);
+            totalSessionReportBeanList = calculateTotalSessionNum(dateBeginStr, dateEndStr, targetChannels);
 
-            List<CoreReportBean> validSessionReportBeanList = calculateValidSession(dateBeginStr,dateEndStr,targetChannels);
+            List<CoreReportBean> validSessionReportBeanList = calculateValidSession(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
                 CoreReportBean tmp = getBeanByChannelId(validSessionReportBeanList, item.getChannelId());
                 if (tmp != null)
                     item.setValidSessionNum(tmp.getValidSessionNum());
             }
 
-            List<CoreReportBean> validBusinessReportBeanList = calculateValidBusinessSession(dateBeginStr,dateEndStr,targetChannels);
-            for (CoreReportBean item : totalSessionReportBeanList){
-                CoreReportBean tmp = getBeanByChannelId(validBusinessReportBeanList,item.getChannelId());
+            List<CoreReportBean> validBusinessReportBeanList = calculateValidBusinessSession(dateBeginStr, dateEndStr, targetChannels);
+            for (CoreReportBean item : totalSessionReportBeanList) {
+                CoreReportBean tmp = getBeanByChannelId(validBusinessReportBeanList, item.getChannelId());
                 if (tmp != null)
                     item.setValidBusinessSessionNum(tmp.getValidBusinessSessionNum());
             }
 
-            List<CoreReportBean> acsSessionBeanList = calulateAcsSession(dateBeginStr,dateEndStr,targetChannels);
+            List<CoreReportBean> acsSessionBeanList = calulateAcsSession(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
                 CoreReportBean tmp = getBeanByChannelId(acsSessionBeanList, item.getChannelId());
                 if (tmp != null) {
@@ -139,7 +139,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
                 }
                 item.setNonAcsSessionNum(item.getTotalSessionNum() - item.getAcsSessionNum());
             }
-            List<CoreReportBean> validNoAcsSessionBeanList = calculateValidNoAcsSession(dateBeginStr,dateEndStr,targetChannels);
+            List<CoreReportBean> validNoAcsSessionBeanList = calculateValidNoAcsSession(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
                 CoreReportBean tmp = getBeanByChannelId(validNoAcsSessionBeanList, item.getChannelId());
                 int tmpValidNoAcsNum = 0;
@@ -147,14 +147,14 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
                     tmpValidNoAcsNum = tmp.getValidNoAcsSessionNum();
                 item.setValidNoAcsSessionNum(item.getValidSessionNum() - tmpValidNoAcsNum);
             }
-            List<CoreReportBean> interactRoundBeanList = calculateInteractRound(dateBeginStr,dateEndStr,targetChannels);
+            List<CoreReportBean> interactRoundBeanList = calculateInteractRound(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
                 CoreReportBean tmp = getBeanByChannelId(interactRoundBeanList, item.getChannelId());
                 if (tmp != null)
                     item.setInteractRound(tmp.getInteractRound());
             }
 
-            List<CoreReportBean> averageBeanList = calculateAverageConversionTime(dateBeginStr,dateEndStr,targetChannels);
+            List<CoreReportBean> averageBeanList = calculateAverageConversionTime(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
                 CoreReportBean tmp = getBeanByChannelId(averageBeanList, item.getChannelId());
                 if (tmp != null)
@@ -170,7 +170,10 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
                 item.setMachineRate(BigDecimal.ONE.subtract(item.getAcsTotalRate()));
             }
 
-            totalSessionReportBeanList.stream().forEach(item -> {item.setDateBegin(dateBeginStr); item.setDateEnd(dateEndStr);});
+            totalSessionReportBeanList.stream().forEach(item -> {
+                item.setDateBegin(dateBeginStr);
+                item.setDateEnd(dateEndStr);
+            });
 
 
         } catch (Exception e) {
@@ -188,10 +191,12 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @return
      */
     private CoreReportBean getBeanByChannelId(List<CoreReportBean> ret, String channelId) {
-        if (StringUtils.isBlank(channelId))
-            return null;
+
         if (ret != null && ret.size() > 0) {
             for (CoreReportBean item : ret) {
+                if (channelId == null && item != null && item.getChannelId() == null) {
+                    return item;
+                }
                 if (item != null && channelId.equals(item.getChannelId()))
                     return item;
             }
@@ -205,31 +210,31 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
      * @return
      */
     private List<CoreReportBean> calculateValidNoAcsSession(String dateBegin, String dateEnd, List<String> channelIdList) {
-        HashMap<String,Object> req = new HashMap<String, Object>();
-        req.put("beginDate",dateBegin);
-        req.put("endDate",dateEnd);
-        req.put("channnelId",channelIdList);
-        List<CoreReportBean> cnt =  MySQLHelper.getInstance().getChatRecordDao().queryTotalSessionMoreThanOne(req);
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("beginDate", dateBegin);
+        req.put("endDate", dateEnd);
+        req.put("channnelId", channelIdList);
+        List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryTotalSessionMoreThanOne(req);
         return cnt;
     }
 
     private List<CoreReportBean> calulateAcsSession(String dateBegin, String dateEnd, List<String> channelIdList) {
 
-        HashMap<String,Object> req = new HashMap<String, Object>();
-        req.put("beginDate",dateBegin);
-        req.put("endDate",dateEnd);
-        req.put("channnelId",channelIdList);
-        List<CoreReportBean> cnt =  MySQLHelper.getInstance().getChatRecordDao().queryAcsSession(req);
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("beginDate", dateBegin);
+        req.put("endDate", dateEnd);
+        req.put("channnelId", channelIdList);
+        List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryAcsSession(req);
         return cnt;
     }
 
 
     private List<CoreReportBean> calculateValidSession(String dateBegin, String dateEnd, List<String> channelIdList) {
-        HashMap<String,Object> req = new HashMap<String, Object>();
-        req.put("beginDate",dateBegin);
-        req.put("endDate",dateEnd);
-        req.put("channnelId",channelIdList);
-        List<CoreReportBean> cnt =  MySQLHelper.getInstance().getChatRecordDao().queryValidSession(req);
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("beginDate", dateBegin);
+        req.put("endDate", dateEnd);
+        req.put("channnelId", channelIdList);
+        List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryValidSession(req);
         return cnt;
 
     }
