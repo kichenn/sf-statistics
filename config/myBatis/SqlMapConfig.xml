@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 扫描自定义别名  -->
+    <typeAliases>
+        <typeAlias type="report.ChatRecordEntity" alias="ChatRecordEntity" />
+        <typeAlias type="report.StaticRecordDto" alias="StaticRecordDto"/>
+        <typeAlias type="report.CoreReportBean" alias="CoreReportBean"/>
+        <typeAlias type="report.RoundNumReportPo" alias="RoundNumReportPo"/>
+        <typeAlias type="report.HourSessionReportPo" alias="HourSessionReportPo"/>
+        <typeAlias type="report.DialogueTimeReportPo" alias="DialogueTimeReportPo"/>
+        <typeAlias type="report.FaqIndexReportDto" alias="FaqIndexReportDto"/>
+    </typeAliases>
+
+    <!-- 加载映射文件 -->
+    <mappers>
+        <mapper resource="sqlMap/ChatRecordDao.xml"/>
+    </mappers>
+</configuration>

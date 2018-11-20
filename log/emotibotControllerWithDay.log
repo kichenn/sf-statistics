@@ -1,0 +1,7 @@
+2018-11-20 11:28:46 - [ INFO  ] - [ ControllerServlet.main():64                   ] - [server start on port: '8081'
+2018-11-20 13:37:14 - [ INFO  ] - [ ControllerServlet.main():64                   ] - [server start on port: '8081'
+2018-11-20 13:37:39 - [ INFO  ] - [ report.DialogueTimeReportApiRequest.process():56 ] - [DialogueTimeReportApiRequest] output: '{"beginDate":"2018-11-20 00:00:00","endDate":"2018-11-20 23:59:59"}'
+2018-11-20 13:37:56 - [ INFO  ] - [ report.DialogueTimeReportApiRequest.process():79 ] - [DialogueTimeReportApiRequest] output: 'time consume:17327'
+2018-11-20 13:51:09 - [ INFO  ] - [ ControllerServlet.main():65                   ] - [server start on port: '8081'
+2018-11-20 13:51:15 - [ INFO  ] - [ report.ReportApiRequest.process():40          ] - [ReportApiRequest] output: 'Tue Nov 20 00:00:00 CST 2018,  Tue Nov 20 23:59:59 CST 2018'
+2018-11-20 13:54:58 - [ INFO  ] - [ report.ReportApiRequest.process():59          ] - [ReportApiRequest] output: 'time consume:222522'
