@@ -130,13 +130,14 @@
     <select id="queryValidSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
         select   channelId, count(distinct session_id) as validSessionNum
         from chat_record
-        where user_q != 'welcome_tag'
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
+
         <choose>
             <when test="channnelId != null">
                 and channelId in
@@ -145,6 +146,7 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag'
         group by channelId
     </select>
 
@@ -152,13 +154,14 @@
     <select id="queryValidBusinessSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
         select   channelId, count(distinct session_id) as validBusinessSessionNum
         from chat_record
-        where user_q != 'welcome_tag' and module = 'faq'
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
+
         <choose>
             <when test="channnelId != null">
                 and channelId in
@@ -167,12 +170,14 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag' and module = 'faq'
         group by channelId
     </select>
 
 
     <select id="queryAcsSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
-        select   channelId, count(distinct session_id) as acsSessionNum from chat_record where module = 'ACS'
+        select   channelId, count(distinct session_id) as acsSessionNum from chat_record
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -187,18 +192,20 @@
                 </foreach>
             </when>
         </choose>
+        and module = 'ACS'
         group by channelId
     </select>
 
     <select id="queryTotalSessionMoreThanOne" parameterType="Map" resultType="CoreReportBean"  flushCache="true" useCache="false">
         select   channelId, count(distinct session_id) as totalSessionMoreThanOneNum
-        from chat_record where user_q != 'welcome_tag' and module = 'ACS'
+        from chat_record where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
+        and user_q != 'welcome_tag' and module = 'ACS'
         <choose>
             <when test="channnelId != null">
                 and channelId in
@@ -213,13 +220,14 @@
     <select id="queryInterActRound" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
         select   channelId,count(id)/count(distinct session_id) as interactRound
         from chat_record
-        where user_q != 'welcome_tag'
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
+
         <choose>
             <when test="channnelId != null">
                 and channelId in
@@ -228,6 +236,7 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag'
         group by channelId
     </select>
 
@@ -251,7 +260,6 @@
             </when>
         </choose>
         group by channelId,session_id) a
-
         group by a.channelId
     </select>
 
@@ -262,7 +270,7 @@
         case when sum(case when module = 'ACS' then 1 else 0 end) > 0 then 'M'
         else 'NM' end as acsType
         from chat_record
-        where user_q != 'welcome_tag'
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -277,6 +285,7 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag'
         group by channelId,session_id
         ) a
         group by a.channelId,a.acsType,a.cnt;
@@ -318,7 +327,7 @@
         case when  sum(case when module = 'ACS' then 1 else 0 end) > 0 then 'M'
         else 'NM' end as acsType
         from chat_record
-        where user_q != 'welcome_tag'
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -333,6 +342,7 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag'
         group by channelId,session_id
         ) a
         group by a.channelId ,a.acsType,a.hourtime
@@ -380,7 +390,7 @@
         when timestampdiff(second,min(a.created_time),(max(a.created_time)))    <![CDATA[  <= ]]>   60 then 60
         else 61 end as 'duringSecond'
         from chat_record a
-        where a.user_q != 'welcome_tag'
+        where 1=1
         <if test="beginDate != null">
             and a.created_time >= #{beginDate}
         </if>
@@ -395,6 +405,7 @@
                 </foreach>
             </when>
         </choose>
+        and a.user_q != 'welcome_tag'
         group by a.channelId,a.session_id
         ) b
         group by b.channelId,b.acsType,b.duringSecond
@@ -406,7 +417,7 @@
 
     <select id="faqIndexTotalRoundReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) totalRound from chat_record
-        where user_q != 'welcome_tag'
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -421,14 +432,14 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag'
         group by channelId;
     </select>
 
 
     <select id="faqIndexMissReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) faqMissNum from chat_record
-        where user_q != 'welcome_tag'
-        and module = 'backfill'
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -443,14 +454,15 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag'
+        and module = 'backfill'
         group by channelId;
     </select>
 
     <select id="faqIndexDirectReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) directAnswerNum
         from chat_record
-        where user_q != 'welcome_tag'
-        and module = 'faq' and score >= #{faqThreshold0}
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -465,14 +477,16 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag'
+        and module = 'faq'
+        and score >= #{faqThreshold0}
         group by channelId;
     </select>
 
     <select id="faqIndexRecommendReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) recommendAnswerNum
         from chat_record
-        where user_q != 'welcome_tag' and module = 'faq' and score <![CDATA[  < ]]> #{faqThreshold0} and score >=
-        #{faqThreshold2}
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -487,6 +501,10 @@
                 </foreach>
             </when>
         </choose>
+        and user_q != 'welcome_tag'
+        and module = 'faq'
+        and score <![CDATA[  < ]]> #{faqThreshold0}
+        and score >=#{faqThreshold2}
         group by channelId;
     </select>
 </mapper>
