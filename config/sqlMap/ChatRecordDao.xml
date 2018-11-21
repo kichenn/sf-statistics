@@ -88,7 +88,7 @@
         select
         channel_id ,bquestion,answer_id,reason,count(id) reasonCnt
         from static_record_info
-        where 1=1 and reason != ''
+        where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -103,6 +103,7 @@
                 </foreach>
             </when>
         </choose>
+        and reason != ''
         group by channel_id,bquestion,answer_id,reason;
     </select>
 
