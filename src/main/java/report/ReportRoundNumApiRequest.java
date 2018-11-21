@@ -59,10 +59,10 @@ public class ReportRoundNumApiRequest extends BaseReportRequest {
         if (!CollectionUtils.isEmpty(channelIds))
             req.put("channnelId", channelIds);
 
-        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(),StrUtils.printObjectJson(req) ));
+        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), StrUtils.printObjectJson(req)));
 
         String title = "roundNumReport";
-        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate)+  ".xls";
+        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) + ".xls";
         String fileNamePath = tmpDir + "/" + fileName;
 
         File historyFile = new File(fileNamePath);
@@ -152,11 +152,17 @@ public class ReportRoundNumApiRequest extends BaseReportRequest {
     }
 
     private static RoundNumReportDto find(RoundNumReportPo po, List<RoundNumReportDto> ret) {
-        if (StringUtil.isBlank(po.getChannelId()) || StringUtil.isBlank(po.getAcsType())){
-            return null;
-        }
+//        if (StringUtil.isBlank(po.getChannelId()) || StringUtil.isBlank(po.getAcsType())){
+//            return null;
+//        }
         for (RoundNumReportDto i : ret) {
-            if (po.getChannelId().equals(i.getChannelId()) && po.getAcsType().equals(i.getAcsType())) {
+            if (StringUtil.isBlank(po.getChannelId())
+                    && StringUtil.isBlank(i.getChannelId())
+                    && po.getAcsType().equals(i.getAcsType())
+                    ) {
+                return i;
+            }
+            if (StringUtil.isNotBlank(po.getChannelId()) && po.getChannelId().equals(i.getChannelId()) && po.getAcsType().equals(i.getAcsType())) {
                 return i;
             }
         }
@@ -232,7 +238,6 @@ public class ReportRoundNumApiRequest extends BaseReportRequest {
 
 
     }
-
 
 
 }

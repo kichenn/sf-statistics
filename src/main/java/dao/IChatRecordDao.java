@@ -12,7 +12,7 @@ import java.util.Map;
 @MapperScan
 public interface IChatRecordDao {
 
-    List<ChatRecordEntity> queryChatRecordAll();
+    List<ChatRecordEntity> queryChatRecordAll(Map req);
 
     List<StaticRecordDto> queryStaticRecordInfo(Map req);
 

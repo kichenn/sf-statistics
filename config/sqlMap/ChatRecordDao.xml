@@ -8,6 +8,23 @@
         <id column="id" property="id" javaType="long"/>
         <result column="app_id" property="appId" javaType="String"/>
         <result column="user_id" property="userId" javaType="String"/>
+        <result column="user_id" property="sessionId" javaType="String"/>
+        <result column="user_q" property="userQ" javaType="String"/>
+        <result column="std_q" property="stdQ" javaType="String"/>
+        <result column="answer" property="answer" javaType="String"/>
+        <result column="module" property="module" javaType="String"/>
+        <result column="emotion" property="emotion" javaType="String"/>
+        <result column="emotion_score" property="emotionScore" javaType="Integer"/>
+        <result column="intent" property="intent" javaType="String"/>
+        <result column="intent_socre" property="intentScore" javaType="Integer"/>
+        <result column="created_time" property="createdTime" javaType="Date"/>
+        <result column="log_time" property="logTime" javaType="String"/>
+        <result column="score" property="score" javaType="Integer"/>
+        <result column="custom_info" property="customInfo" javaType="String"/>
+        <result column="host" property="host" javaType="String"/>
+        <result column="unique_id" property="uniqueId" javaType="String"/>
+        <result column="note" property="note" javaType="String"/>
+        <result column="channelId" property="channelId" javaType="String"/>
     </resultMap>
 
     <resultMap id="StaticRecordMapping" type="StaticRecordDto">
@@ -24,10 +41,25 @@
 
     <select id="queryChatRecordAll" resultType="ChatRecordEntity" resultMap="ChatRecordMapping">
         SELECT * from chat_record
+        where 1=1
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <choose>
+            <when test="channnelId != null">
+                and channel_id in
+                <foreach collection="channnelId" item="channnelId" separator="," open="(" close=")">
+                    #{channnelId}
+                </foreach>
+            </when>
+        </choose>
     </select>
 
 
-    <select id="queryStaticRecordInfo" parameterType="Map" resultType="StaticRecordDto" resultMap="StaticRecordMapping">
+    <select id="queryStaticRecordInfo" parameterType="Map" resultType="StaticRecordDto" resultMap="StaticRecordMapping" flushCache="true" useCache="false">
         select
         channel_id ,bquestion,answer_id,sum(case qa_solved when 0 then 1 when 1 then 1 else 0 end) as visitCnt,
         sum( case qa_solved when 0 then 1 else 0 end ) as unSolvedCnt,
@@ -52,7 +84,7 @@
     </select>
 
     <select id="queryStaticRecordReasonInfo" parameterType="Map" resultType="StaticRecordDto"
-            resultMap="StaticRecordMapping">
+            resultMap="StaticRecordMapping" flushCache="true" useCache="false">
         select
         channel_id ,bquestion,answer_id,reason,count(id) reasonCnt
         from static_record_info
@@ -75,8 +107,8 @@
     </select>
 
 
-    <select id="queryTotalSession" parameterType="Map" resultType="CoreReportBean">
-        select channelId, count(distinct session_id) as totalSessionNum
+    <select id="queryTotalSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
+        select   channelId, count(distinct session_id) as totalSessionNum
         from chat_record where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -95,8 +127,8 @@
         group by channelId;
     </select>
 
-    <select id="queryValidSession" parameterType="Map" resultType="CoreReportBean">
-        select channelId, count(distinct session_id) as validSessionNum
+    <select id="queryValidSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
+        select   channelId, count(distinct session_id) as validSessionNum
         from chat_record
         where user_q != 'welcome_tag'
         <if test="beginDate != null">
@@ -117,8 +149,8 @@
     </select>
 
 
-    <select id="queryValidBusinessSession" parameterType="Map" resultType="CoreReportBean">
-        select channelId, count(distinct session_id) as validBusinessSessionNum
+    <select id="queryValidBusinessSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
+        select   channelId, count(distinct session_id) as validBusinessSessionNum
         from chat_record
         where user_q != 'welcome_tag' and module = 'faq'
         <if test="beginDate != null">
@@ -139,8 +171,8 @@
     </select>
 
 
-    <select id="queryAcsSession" parameterType="Map" resultType="CoreReportBean">
-        select channelId, count(distinct session_id) as acsSessionNum from chat_record where module = 'ACS'
+    <select id="queryAcsSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
+        select   channelId, count(distinct session_id) as acsSessionNum from chat_record where module = 'ACS'
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -158,8 +190,8 @@
         group by channelId
     </select>
 
-    <select id="queryTotalSessionMoreThanOne" parameterType="Map" resultType="CoreReportBean">
-        select channelId, count(distinct session_id) as totalSessionMoreThanOneNum
+    <select id="queryTotalSessionMoreThanOne" parameterType="Map" resultType="CoreReportBean"  flushCache="true" useCache="false">
+        select   channelId, count(distinct session_id) as totalSessionMoreThanOneNum
         from chat_record where user_q != 'welcome_tag' and module = 'ACS'
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -178,8 +210,8 @@
         group by channelId
     </select>
 
-    <select id="queryInterActRound" parameterType="Map" resultType="CoreReportBean">
-        select channelId,count(id)/count(distinct session_id) as interactRound
+    <select id="queryInterActRound" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
+        select   channelId,count(id)/count(distinct session_id) as interactRound
         from chat_record
         where user_q != 'welcome_tag'
         <if test="beginDate != null">
@@ -199,9 +231,9 @@
         group by channelId
     </select>
 
-    <select id="queryAverageConversionTime" parameterType="Map" resultType="CoreReportBean">
-        select a.channelId, sum(a.conversionTime)/count(session_id) as averageConversionTime from
-        (select channelId,session_id , timestampdiff(second,min(created_time), (max(created_time))) as conversionTime
+    <select id="queryAverageConversionTime" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
+        select  a.channelId, sum(a.conversionTime)/count(session_id) as averageConversionTime from
+        (select  channelId,session_id , timestampdiff(second,min(created_time), (max(created_time))) as conversionTime
         from chat_record where 1=1
         -- where user_q != 'welcome_tag'
         <if test="beginDate != null">
@@ -223,7 +255,7 @@
         group by a.channelId
     </select>
 
-    <select id="calRoundNumReport" parameterType="Map" resultType="RoundNumReportPo">
+    <select id="calRoundNumReport" parameterType="Map" resultType="RoundNumReportPo" flushCache="true" useCache="false">
         select a.channelId channelId,a.acsType acsType,a.cnt roundNum,count(a.session_id) roundNumCnt
         from (
         select channelId,session_id, case when count(id) > 10 then 11 else count(id) end as cnt,
@@ -251,7 +283,7 @@
     </select>
 
 
-    <select id="hourSessionReport" parameterType="Map" resultType="HourSessionReportPo">
+    <select id="hourSessionReport" parameterType="Map" resultType="HourSessionReportPo" flushCache="true" useCache="false">
         select b.channelId ,b.acsType
         ,sum(if(b.hourtime != -1,b.cid,null)) as 'hday'
         ,sum(if(b.hourtime=0,b.cid,null)) as 'h1'
@@ -310,7 +342,7 @@
     </select>
 
 
-    <select id="dialogueTimeReport" parameterType="Map" resultType="DialogueTimeReportPo">
+    <select id="dialogueTimeReport" parameterType="Map" resultType="DialogueTimeReportPo" flushCache="true" useCache="false">
         select c.channelId,c.acsType
         ,sum(if(c.duringSecond != -1,c.sidcnt,null)) as 'sall'
         ,sum(if(c.duringSecond=5,c.sidcnt,null)) as 's5'
@@ -372,7 +404,7 @@
     </select>
 
 
-    <select id="faqIndexTotalRoundReport" parameterType="Map" resultType="FaqIndexReportDto">
+    <select id="faqIndexTotalRoundReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) totalRound from chat_record
         where user_q != 'welcome_tag'
         <if test="beginDate != null">
@@ -393,7 +425,7 @@
     </select>
 
 
-    <select id="faqIndexMissReport" parameterType="Map" resultType="FaqIndexReportDto">
+    <select id="faqIndexMissReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) faqMissNum from chat_record
         where user_q != 'welcome_tag'
         and module = 'backfill'
@@ -414,7 +446,7 @@
         group by channelId;
     </select>
 
-    <select id="faqIndexDirectReport" parameterType="Map" resultType="FaqIndexReportDto">
+    <select id="faqIndexDirectReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) directAnswerNum
         from chat_record
         where user_q != 'welcome_tag'
@@ -436,7 +468,7 @@
         group by channelId;
     </select>
 
-    <select id="faqIndexRecommendReport" parameterType="Map" resultType="FaqIndexReportDto">
+    <select id="faqIndexRecommendReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) recommendAnswerNum
         from chat_record
         where user_q != 'welcome_tag' and module = 'faq' and score <![CDATA[  < ]]> #{faqThreshold0} and score >=

@@ -2,6 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import org.junit.Test;
+import report.ChatRecordEntity;
 import report.FaqIndexReportDto;
 import report.RoundNumReportDto;
 import report.RoundNumReportPo;
@@ -67,17 +68,18 @@ public class HandlerUtilitiesTest {
 //
 //        System.out.println(new Gson().toJson(list));
         HashMap<String, Object> req = new HashMap<String, Object>();
-        req.put("beginDate", "2017-11-06 15:51:28");
-        req.put("endDate", "2020-11-06 15:51:28");
-        List<String> cls = new ArrayList<>();
-        cls.add("suibiao");
-        cls.add("suibian");
-        req.put("channnelId", cls);
-        req.put("faqThreshold0", 95);
-        req.put("faqThreshold3", 45);
-
-        List<FaqIndexReportDto> ret = MySQLHelper.getInstance().getChatRecordDao().faqIndexTotalRoundReport(req);
-//
+        req.put("beginDate", "2017-11-19");
+        req.put("endDate", "2020-11-20");
+//        List<String> cls = new ArrayList<>();
+//        cls.add("suibiao");
+//        cls.add("suibian");
+//        req.put("channnelId", cls);
+//        req.put("faqThreshold0", 95);
+//        req.put("faqThreshold3", 45);
+        long startTIme = System.currentTimeMillis();
+        List<ChatRecordEntity> ret = MySQLHelper.getInstance().getChatRecordDao().queryChatRecordAll(req);
+        System.out.println("勇士："+(System.currentTimeMillis() - startTIme));
+        System.out.println("数据大小"+ret.size());
 //        List<FaqIndexReportDto> faqMissList = MySQLHelper.getInstance().getChatRecordDao().faqIndexMissReport(req);
 //        for (FaqIndexReportDto i : faqMissList) {
 //            FaqIndexReportDto target = getFaqIndexReportDtoByChannelId(i.getChannelId(), ret);
@@ -105,7 +107,7 @@ public class HandlerUtilitiesTest {
 //            i.setFaqMissRate(BigDecimalUtils.divide4Long(i.getFaqMissNum(), i.getFaqTotalNum()));
 //        }
 //
-        System.out.println(new Gson().toJson(ret));
+//        System.out.println(new Gson().toJson(ret));
 //        List<RoundNumReportPo> list = MySQLHelper.getInstance().getChatRecordDao().calRoundNumReport(req);
 //        List<RoundNumReportDto> ret = new ArrayList<>();
 //        for (RoundNumReportPo p : list) {

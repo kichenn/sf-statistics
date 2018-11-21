@@ -197,7 +197,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
                 if (channelId == null && item != null && item.getChannelId() == null) {
                     return item;
                 }
-                if (item != null && channelId.equals(item.getChannelId()))
+                if (channelId != null && item != null && channelId.equals(item.getChannelId()))
                     return item;
             }
         }
