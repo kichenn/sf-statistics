@@ -5,6 +5,7 @@
 
  /v1/sf/ coreReport
 例如：http://localhost:8080/v1/sf/coreReport?beginDate=2018-11-11&endDate=2018-11-15
+
 1关键指标：(chat_record)
 总会话量：每个渠道不同session_id数
 有效会话量（有效业务会话量）：去掉user_q=‘welcome_tag’欢迎语，模块module等于faq的 不同session_id数
@@ -23,6 +24,7 @@
 
 
  /v1/sf/ satisfyReport
+
 2.知识点
 知识点
 标准问题
@@ -33,6 +35,7 @@
 
 
 /v1/sf/roundNumReport
+
 3.交互轮数
 去掉欢迎语，module是否为ACS，根据渠道，acs类型，session_id 来 统计次数，次数小于10，单独为轮数，次数大于10 为 >10轮
  然后再根据 渠道，acs类型，轮数，来统计不同session_id个数即会话量
@@ -44,6 +47,7 @@
 
 
 /v1/sf/dialogueTimeReport
+
 4.对话时长
 去掉欢迎语，根据 渠道，acs类型，session_id 来统计，create_time最大值减去最小值 即对话时长,小于60秒以5秒为间隔，大于60s为 >60s一类
 再根据渠道，acs类型，时长，计算不同session_id个数作为会话量，再根据渠道 和 acs类型 统计不同时长 里 session数总和
@@ -56,6 +60,7 @@
 
 
 /v1/sf/hourReport
+
 5.时段分布
 去掉欢迎语，获取create_time的小时数据，根据渠道，类型，小时，统计不同session_id数
  再根据渠道，类型，统计小时数为0，1，2等 的session_id数总和
@@ -69,6 +74,7 @@
 
 
 /v1/sf/faqindexReport
+
 6.问答指标
 
 渠道
