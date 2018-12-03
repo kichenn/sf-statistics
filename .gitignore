@@ -1,0 +1,19 @@
+target/
+bin/
+log/*
+.idea/
+EmotibotController2.0.iml
+
+.gitignore
+
+
+# Eclipse setting
+.settings
+.classpath
+.project
+
+# Java annotation processor (APT)
+.factorypath 
+
+# mac file attribute
+.DS_Store

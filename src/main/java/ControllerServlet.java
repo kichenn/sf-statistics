@@ -30,27 +30,19 @@ public class ControllerServlet {
     public static void main(String[] args) throws Exception {
 
         ConfigManager configManager = ConfigManagedService.INSTANCE.getConfig();
-//
-//        // Default value
         int port = 9901;
-//        int timeout = 10;
+        int timeout = 10;
+        port = configManager.getInteger(Constants.SERVICE_PORT);
+        int maxThreads = configManager.getInteger(Constants.SERVICE_THREADPOOL_MAX);
+        int minThreads = configManager.getInteger(Constants.SERVICE_THREADPOOL_MIN);
+        timeout = configManager.getInteger(Constants.SERVICE_TIMEOUT);
+
 
         /**
-         * get env
+         * init place
          */
-//        timeout = configManager.getInteger(Constants.SERVICE_TIMEOUT);
-        port = configManager.getInteger(Constants.SERVICE_PORT);
-//        int maxThreads = configManager.getInteger(Constants.SERVICE_THREADPOOL_MAX);
-//        int minThreads = configManager.getInteger(Constants.SERVICE_THREADPOOL_MIN);
-//
-//        /**
-//         * init place
-//         */
-//        ThreadPool.INSTANCE.init(minThreads, maxThreads, timeout);
-//        SyncController.getInstance().init(configManager.getStr(Constants.CONSUL_HOST), configManager.getStr(Constants.CONSUL_KEY_PREFIX));
-//
-//        RedisCache.INSTANCE.init(configManager.getStr(Constants.REDIS_HOST), configManager.getInteger(Constants.REDIS_PORT), configManager.getInteger(Constants.REDIS_CONNECTION_TIMEOUT), configManager.getStr(Constants.REDIS_PASSWORD));
-//        WorkflowController.init();
+        ThreadPool.INSTANCE.init(minThreads, maxThreads, timeout);
+
         /**
          * start service
          */
