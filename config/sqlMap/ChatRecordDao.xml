@@ -125,6 +125,7 @@
                 </foreach>
             </when>
         </choose>
+        and app_id = 'csbot'
         group by channelId;
     </select>
 
@@ -147,7 +148,7 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag'
+        and user_q != 'welcome_tag' and app_id = 'csbot'
         group by channelId
     </select>
 
@@ -171,7 +172,7 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag' and module = 'faq'
+        and user_q != 'welcome_tag' and module = 'faq' and app_id = 'csbot'
         group by channelId
     </select>
 
@@ -193,12 +194,12 @@
                 </foreach>
             </when>
         </choose>
-        and module = 'ACS'
+        and module = 'ACS' and app_id = 'csbot'
         group by channelId
     </select>
 
     <select id="queryTotalSessionMoreThanOne" parameterType="Map" resultType="CoreReportBean"  flushCache="true" useCache="false">
-        select   channelId, count(distinct session_id) as totalSessionMoreThanOneNum
+        select   channelId, count(distinct session_id) as validNoAcsSessionNum
         from chat_record where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -206,7 +207,7 @@
         <if test="endDate != null">
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
-        and user_q != 'welcome_tag' and module = 'ACS'
+        and user_q != 'welcome_tag' and module = 'ACS'  and app_id = 'csbot'
         <choose>
             <when test="channnelId != null">
                 and channelId in
@@ -237,7 +238,7 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag'
+        and user_q != 'welcome_tag' and app_id = 'csbot'
         group by channelId
     </select>
 
@@ -260,6 +261,7 @@
                 </foreach>
             </when>
         </choose>
+        and app_id = 'csbot'
         group by channelId,session_id) a
         group by a.channelId
     </select>
@@ -286,7 +288,7 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag'
+        and user_q != 'welcome_tag' and app_id = 'csbot'
         group by channelId,session_id
         ) a
         group by a.channelId,a.acsType,a.cnt;
@@ -343,7 +345,7 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag'
+        and user_q != 'welcome_tag' and app_id = 'csbot'
         group by channelId,session_id
         ) a
         group by a.channelId ,a.acsType,a.hourtime
@@ -406,7 +408,7 @@
                 </foreach>
             </when>
         </choose>
-        and a.user_q != 'welcome_tag'
+        and a.user_q != 'welcome_tag' and app_id = 'csbot'
         group by a.channelId,a.session_id
         ) b
         group by b.channelId,b.acsType,b.duringSecond
@@ -433,7 +435,7 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag'
+        and user_q != 'welcome_tag' and app_id = 'csbot'
         group by channelId;
     </select>
 
@@ -456,7 +458,7 @@
             </when>
         </choose>
         and user_q != 'welcome_tag'
-        and module = 'backfill'
+        and module = 'backfill' and app_id = 'csbot'
         group by channelId;
     </select>
 
@@ -481,6 +483,7 @@
         and user_q != 'welcome_tag'
         and module = 'faq'
         and score >= #{faqThreshold0}
+        and app_id = 'csbot'
         group by channelId;
     </select>
 
@@ -506,6 +509,7 @@
         and module = 'faq'
         and score <![CDATA[  < ]]> #{faqThreshold0}
         and score >=#{faqThreshold2}
+        and app_id = 'csbot'
         group by channelId;
     </select>
 </mapper>
