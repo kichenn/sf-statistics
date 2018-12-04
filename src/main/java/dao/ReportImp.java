@@ -145,7 +145,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
                 int tmpValidNoAcsNum = 0;
                 if (tmp != null)
                     tmpValidNoAcsNum = tmp.getValidNoAcsSessionNum();
-                item.setValidNoAcsSessionNum(item.getValidSessionNum() - tmpValidNoAcsNum);
+                item.setValidNoAcsSessionNum(item.getValidBusinessSessionNum() - tmpValidNoAcsNum);
             }
             List<CoreReportBean> interactRoundBeanList = calculateInteractRound(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
