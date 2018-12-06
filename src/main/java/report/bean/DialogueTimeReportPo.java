@@ -1,4 +1,4 @@
-package report;
+package report.bean;
 
 public class DialogueTimeReportPo {
     private String dateBeginStr;

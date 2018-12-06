@@ -1,7 +1,7 @@
 package dao;
 
 import org.mybatis.spring.annotation.MapperScan;
-import report.*;
+import report.bean.*;
 
 import java.util.List;
 import java.util.Map;

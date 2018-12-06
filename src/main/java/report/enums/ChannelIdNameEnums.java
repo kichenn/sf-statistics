@@ -1,4 +1,4 @@
-package report;
+package report.enums;
 
 public enum ChannelIdNameEnums {
     channelId717("717", "费用明细渠道"),

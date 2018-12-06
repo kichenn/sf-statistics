@@ -4,6 +4,10 @@ import log.LoggerFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import report.bean.CoreReportBean;
+import report.bean.ReportResult;
+import report.enums.ChannelIdNameEnums;
+import report.enums.ReportResultEnums;
 import utils.DateTools;
 import utils.MySQLHelper;
 import utils.StrUtils;
@@ -15,21 +19,49 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+
 public class ReportApiRequest extends BaseReportRequest {
     public static final String entryPoint = "/v1/sf/coreReport";
+
+    public static final String listEntryPoint = "/v1/sf/coreReportList";
 
     public ReportApiRequest(HttpServletRequest request) {
         super(request);
     }
 
 
+    public ReportResult list() {
+        ReportResult result = new ReportResult(ReportResultEnums.SUCCESS);
+        Date beginDate = null;
+        Date endDate = null;
+        try {
+            beginDate = DateTools.str2DateNormal(dateBegin, DateTools.DateFormat.DATE_FORMAT_4_get);
+            endDate = DateTools.str2DateNormal(dateEnd, DateTools.DateFormat.DATE_FORMAT_4_get);
+        } catch (Exception e) {
+            return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
+        }
+        List<CoreReportBean> ret = MySQLHelper.getInstance().getReportDao().queryReport(beginDate, endDate, null);
+        result.setData(ret);
+        return result;
+    }
+
     public void process(HttpServletRequest request, HttpServletResponse response) {
 
         Date beginDate = null;
         Date endDate = null;
         try {
-            beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
-            endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
+            // 兼容日报报表 和 查询列表接口
+            if (dateBegin != null && dateBegin.length() == 10) {
+                beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
+            } else {
+                beginDate = DateTools.str2DateNormal(dateBegin, DateTools.DateFormat.DATE_FORMAT_4_get);
+            }
+
+            if (dateEnd != null && dateEnd.length() == 10) {
+                endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
+            } else {
+                endDate = DateTools.str2DateNormal(dateEnd, DateTools.DateFormat.DATE_FORMAT_4_get);
+            }
             if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
                 return;
             }
@@ -37,10 +69,10 @@ public class ReportApiRequest extends BaseReportRequest {
             e.printStackTrace();
             return;
         }
-        LoggerFactory.getLogger().info(String.format("[%s] output: '%s,  %s'", this.getClass().getSimpleName(),beginDate,endDate ));
+        LoggerFactory.getLogger().info(String.format("[%s] output: '%s,  %s'", this.getClass().getSimpleName(), beginDate, endDate));
 
         String title = "coreReport";
-        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate)   + ".xls";
+        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) + ".xls";
         String fileNamePath = tmpDir + "/" + fileName;
         File historyFile = new File(fileNamePath);
         if (!historyFile.exists() || "TRUE".equals(isForceNOCache)) {

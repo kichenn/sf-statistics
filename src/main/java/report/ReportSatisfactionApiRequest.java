@@ -6,6 +6,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.util.CollectionUtils;
+import report.bean.ReportResult;
+import report.bean.StaticRecordDto;
+import report.enums.ChannelIdNameEnums;
+import report.enums.ReportResultEnums;
 import utils.DateTools;
 import utils.MySQLHelper;
 import utils.StrUtils;
@@ -22,12 +26,60 @@ import java.util.stream.Collectors;
 
 public class ReportSatisfactionApiRequest extends BaseReportRequest {
     public static final String entryPoint = "/v1/sf/satisfyReport";
-
-
-    private Gson gson = new Gson();
+    public static final String listEntryPoint = "/v1/sf/satisfyReportList";
 
     public ReportSatisfactionApiRequest(HttpServletRequest request) {
         super(request);
+    }
+
+
+    public ReportResult list() {
+        ReportResult result = new ReportResult(ReportResultEnums.SUCCESS);
+        Date beginDate = null;
+        Date endDate = null;
+        try {
+            beginDate = DateTools.str2DateNormal(dateBegin, DateTools.DateFormat.DATE_FORMAT_4_get);
+            endDate = DateTools.str2DateNormal(dateEnd, DateTools.DateFormat.DATE_FORMAT_4_get);
+        } catch (Exception e) {
+            return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        String dateBeginStr = "";
+        String dateEndStr = "";
+        if (dateBegin != null) {
+            dateBeginStr = formatter.format(beginDate);
+            req.put("beginDate", dateBeginStr);
+        }
+        if (dateEnd != null) {
+            dateEndStr = formatter.format(endDate);
+            req.put("endDate", dateEndStr);
+        }
+        if (!CollectionUtils.isEmpty(channelIds))
+            req.put("channnelId", channelIds);
+
+        List<StaticRecordDto> ret = handler(req);
+        result.setData(ret);
+        return result;
+    }
+
+
+    private List<StaticRecordDto> handler(HashMap<String, Object> req) {
+        List<StaticRecordDto> list = MySQLHelper.getInstance().getChatRecordDao().queryStaticRecordInfo(req);
+        List<StaticRecordDto> reasonInfo = MySQLHelper.getInstance().getChatRecordDao().queryStaticRecordReasonInfo(req);
+
+        for (StaticRecordDto item : list) {
+            List<StaticRecordDto> tmp = reasonInfo.stream().filter((StaticRecordDto i) -> i.getChannelId().equals(item.getChannelId())
+                    && i.getAnswerId().equals(item.getAnswerId()) && i.getbQuestion().equals(item.getbQuestion()))
+                    .collect(Collectors.toList());
+            StringBuilder sb = new StringBuilder();
+            for (StaticRecordDto ite : tmp) {
+                sb.append(ite.getReason()).append(":").append(ite.getReasonCnt()).append("\r\n");
+            }
+            item.setReason(sb.toString());
+            item.setReasonCnt(null);
+        }
+        return list;
     }
 
 
@@ -39,8 +91,19 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         Date beginDate = null;
         Date endDate = null;
         try {
-            beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
-            endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
+            // 兼容日报报表 和 查询列表接口
+            if (dateBegin != null && dateBegin.length() == 10) {
+                beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
+            } else {
+                beginDate = DateTools.str2DateNormal(dateBegin, DateTools.DateFormat.DATE_FORMAT_4_get);
+            }
+
+            if (dateEnd != null && dateEnd.length() == 10) {
+                endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
+            } else {
+                endDate = DateTools.str2DateNormal(dateEnd, DateTools.DateFormat.DATE_FORMAT_4_get);
+            }
+
             if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
                 return;
             }
@@ -59,11 +122,11 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         if (!CollectionUtils.isEmpty(channelIds))
             req.put("channnelId", channelIds);
 
-        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(),StrUtils.printObjectJson(req) ));
+        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), StrUtils.printObjectJson(req)));
 
 
         String title = "satisfyReport";
-        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate)  + ".xls";
+        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) + ".xls";
         String fileNamePath = tmpDir + "/" + fileName;
         File historyFile = new File(fileNamePath);
         if (!historyFile.exists() || "TRUE".equals(isForceNOCache)) {
@@ -76,21 +139,7 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
                 }
             }
 
-
-            List<StaticRecordDto> list = MySQLHelper.getInstance().getChatRecordDao().queryStaticRecordInfo(req);
-            List<StaticRecordDto> reasonInfo = MySQLHelper.getInstance().getChatRecordDao().queryStaticRecordReasonInfo(req);
-
-            for (StaticRecordDto item : list) {
-                List<StaticRecordDto> tmp = reasonInfo.stream().filter((StaticRecordDto i) -> i.getChannelId().equals(item.getChannelId())
-                        && i.getAnswerId().equals(item.getAnswerId()) && i.getbQuestion().equals(item.getbQuestion()))
-                        .collect(Collectors.toList());
-                StringBuilder sb = new StringBuilder();
-                for (StaticRecordDto ite : tmp) {
-                    sb.append(ite.getReason()).append(":").append(ite.getReasonCnt()).append("\r\n");
-                }
-                item.setReason(sb.toString());
-                item.setReasonCnt(null);
-            }
+            List<StaticRecordDto> list = handler(req);
             for (StaticRecordDto item : list) {
                 item.setDateBegin(dateBeginStr);
                 item.setDateEnd(dateEndStr);

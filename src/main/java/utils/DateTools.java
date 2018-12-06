@@ -10,6 +10,8 @@ public class DateTools {
 
     public enum DateFormat {
         DATE_FORMAT_stand("yyyy-MM-dd HH:mm:ss"),
+        DATE_FORMAT_4_get("yyyy-MM-dd-HH:mm:ss"),
+
         DATE_FORMAT_request_day("yyyy-MM-dd");
 
         private DateFormat(String format) {
@@ -18,6 +20,11 @@ public class DateTools {
 
         private String format;
 
+    }
+
+    public static Date str2DateNormal(String datestr,DateFormat format) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format.format);
+        return sdf.parse(datestr);
     }
 
     public static Date str2Date(String datestr, DateFormat format, boolean beginOrEnd) throws ParseException {

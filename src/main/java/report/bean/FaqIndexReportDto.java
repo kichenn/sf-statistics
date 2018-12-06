@@ -1,4 +1,4 @@
-package report;
+package report.bean;
 
 
 import java.math.BigDecimal;

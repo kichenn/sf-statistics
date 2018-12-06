@@ -1,18 +1,16 @@
 package handler;
 
-import com.google.gson.Gson;
 import org.junit.Test;
-import report.ChatRecordEntity;
-import report.FaqIndexReportDto;
-import report.RoundNumReportDto;
-import report.RoundNumReportPo;
+import report.bean.ChatRecordEntity;
+import report.bean.FaqIndexReportDto;
+import report.bean.RoundNumReportDto;
+import report.bean.RoundNumReportPo;
 import utils.HandlerUtilities;
 import utils.MySQLHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

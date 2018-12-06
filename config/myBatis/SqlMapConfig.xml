@@ -5,13 +5,13 @@
 <configuration>
     <!-- 扫描自定义别名  -->
     <typeAliases>
-        <typeAlias type="report.ChatRecordEntity" alias="ChatRecordEntity" />
-        <typeAlias type="report.StaticRecordDto" alias="StaticRecordDto"/>
-        <typeAlias type="report.CoreReportBean" alias="CoreReportBean"/>
-        <typeAlias type="report.RoundNumReportPo" alias="RoundNumReportPo"/>
-        <typeAlias type="report.HourSessionReportPo" alias="HourSessionReportPo"/>
-        <typeAlias type="report.DialogueTimeReportPo" alias="DialogueTimeReportPo"/>
-        <typeAlias type="report.FaqIndexReportDto" alias="FaqIndexReportDto"/>
+        <typeAlias type="report.bean.ChatRecordEntity" alias="ChatRecordEntity" />
+        <typeAlias type="report.bean.StaticRecordDto" alias="StaticRecordDto"/>
+        <typeAlias type="report.bean.CoreReportBean" alias="CoreReportBean"/>
+        <typeAlias type="report.bean.RoundNumReportPo" alias="RoundNumReportPo"/>
+        <typeAlias type="report.bean.HourSessionReportPo" alias="HourSessionReportPo"/>
+        <typeAlias type="report.bean.DialogueTimeReportPo" alias="DialogueTimeReportPo"/>
+        <typeAlias type="report.bean.FaqIndexReportDto" alias="FaqIndexReportDto"/>
     </typeAliases>
 
     <!-- 加载映射文件 -->

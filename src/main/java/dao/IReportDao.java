@@ -1,7 +1,6 @@
 package dao;
 
-import report.CoreReportBean;
-import type.immutable.ChatRecord;
+import report.bean.CoreReportBean;
 
 import java.util.Date;
 import java.util.List;
