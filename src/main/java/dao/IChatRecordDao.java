@@ -12,6 +12,8 @@ import java.util.Map;
 @MapperScan
 public interface IChatRecordDao {
 
+    List<SessionDetailItemDto> querySessionDetail(Map req);
+
     List<ChatRecordEntity> queryChatRecordAll(Map req);
 
     List<StaticRecordDto> queryStaticRecordInfo(Map req);

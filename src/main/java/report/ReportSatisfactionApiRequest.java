@@ -43,6 +43,9 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > 1L) {
+            return new ReportResult(ReportResultEnums.DATE_SPAN_TOO_LONG);
+        }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         HashMap<String, Object> req = new HashMap<String, Object>();
         String dateBeginStr = "";
@@ -59,6 +62,9 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             req.put("channnelId", channelIds);
 
         List<StaticRecordDto> ret = handler(req);
+        for (StaticRecordDto itm : ret){
+            itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
+        }
         result.setData(ret);
         return result;
     }

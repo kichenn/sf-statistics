@@ -2,7 +2,8 @@ package report.enums;
 
 public enum  ReportResultEnums {
     SUCCESS("0000","success"),
-    DATE_PARSE_EXCEPTION("1000","date format error")
+    DATE_PARSE_EXCEPTION("1000","date format error"),
+    DATE_SPAN_TOO_LONG("1001","date span too long")
     ;
 
 

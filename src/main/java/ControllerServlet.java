@@ -1,4 +1,5 @@
 
+import com.google.gson.Gson;
 import config.ConfigManagedService;
 import config.ConfigManager;
 import config.Constants;
@@ -7,6 +8,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import report.*;
+import report.bean.ReportResult;
 import staticPart.ThreadPool;
 
 import javax.servlet.ServletException;
@@ -97,6 +99,21 @@ public class ControllerServlet {
 
                 FaqIndexApiRequest reportApiRequest = new FaqIndexApiRequest(request);
                 reportApiRequest.process(request, response);
+            } else if (request.getRequestURI().equals(ReportApiRequest.listEntryPoint)) {
+
+                ReportApiRequest reportApiRequest = new ReportApiRequest(request);
+                ReportResult reportResult = reportApiRequest.list();
+                setResponseInfo(response, new Gson().toJson(reportResult));
+            } else if (request.getRequestURI().equals(ReportSatisfactionApiRequest.listEntryPoint)) {
+
+                ReportSatisfactionApiRequest reportApiRequest = new ReportSatisfactionApiRequest(request);
+                ReportResult reportResult = reportApiRequest.list();
+                setResponseInfo(response, new Gson().toJson(reportResult));
+            }else if (request.getRequestURI().equals(SessionDetailRequest.listEntryPoint)) {
+
+                SessionDetailRequest reportApiRequest = new SessionDetailRequest(request);
+                ReportResult reportResult = reportApiRequest.list();
+                setResponseInfo(response, new Gson().toJson(reportResult));
             } else {
                 setResponseInfo(response, otherAPIUrl(), "text/html;charset=utf-8");
             }

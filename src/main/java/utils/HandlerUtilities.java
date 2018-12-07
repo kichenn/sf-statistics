@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HandlerUtilities {
-    private static Pattern invalidIdPattern = Pattern.compile("[^a-zA-Z0-9 _-]", Pattern.CASE_INSENSITIVE);
+    private static Pattern invalidIdPattern = Pattern.compile("[^a-zA-Z0-9: _-]", Pattern.CASE_INSENSITIVE);
 
     public static boolean isValidParameter(String param) {
         if (param == null || param.isEmpty())

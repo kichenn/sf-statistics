@@ -12,6 +12,7 @@
         <typeAlias type="report.bean.HourSessionReportPo" alias="HourSessionReportPo"/>
         <typeAlias type="report.bean.DialogueTimeReportPo" alias="DialogueTimeReportPo"/>
         <typeAlias type="report.bean.FaqIndexReportDto" alias="FaqIndexReportDto"/>
+        <typeAlias type="report.bean.SessionDetailItemDto" alias="SessionDetailItemDto"/>
     </typeAliases>
 
     <!-- 加载映射文件 -->

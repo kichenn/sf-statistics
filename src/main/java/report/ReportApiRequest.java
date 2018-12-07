@@ -40,7 +40,14 @@ public class ReportApiRequest extends BaseReportRequest {
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > 1L) {
+            return new ReportResult(ReportResultEnums.DATE_SPAN_TOO_LONG);
+        }
+
         List<CoreReportBean> ret = MySQLHelper.getInstance().getReportDao().queryReport(beginDate, endDate, null);
+        for (CoreReportBean itm : ret){
+            itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
+        }
         result.setData(ret);
         return result;
     }

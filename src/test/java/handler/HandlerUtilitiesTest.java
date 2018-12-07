@@ -1,10 +1,7 @@
 package handler;
 
 import org.junit.Test;
-import report.bean.ChatRecordEntity;
-import report.bean.FaqIndexReportDto;
-import report.bean.RoundNumReportDto;
-import report.bean.RoundNumReportPo;
+import report.bean.*;
 import utils.HandlerUtilities;
 import utils.MySQLHelper;
 
@@ -66,8 +63,9 @@ public class HandlerUtilitiesTest {
 //
 //        System.out.println(new Gson().toJson(list));
         HashMap<String, Object> req = new HashMap<String, Object>();
-        req.put("beginDate", "2017-11-19");
-        req.put("endDate", "2020-11-20");
+        req.put("beginDate", "2018-12-07");
+        req.put("endDate", "2018-12-08");
+        req.put("sessionId","sessionid100000");
 //        List<String> cls = new ArrayList<>();
 //        cls.add("suibiao");
 //        cls.add("suibian");
@@ -75,9 +73,10 @@ public class HandlerUtilitiesTest {
 //        req.put("faqThreshold0", 95);
 //        req.put("faqThreshold3", 45);
         long startTIme = System.currentTimeMillis();
-        List<ChatRecordEntity> ret = MySQLHelper.getInstance().getChatRecordDao().queryChatRecordAll(req);
-        System.out.println("勇士："+(System.currentTimeMillis() - startTIme));
-        System.out.println("数据大小"+ret.size());
+//        List<ChatRecordEntity> ret = MySQLHelper.getInstance().getChatRecordDao().queryChatRecordAll(req);
+
+        List<SessionDetailItemDto> ret = MySQLHelper.getInstance().getChatRecordDao().querySessionDetail(req);
+        System.out.println(ret.toArray());
 //        List<FaqIndexReportDto> faqMissList = MySQLHelper.getInstance().getChatRecordDao().faqIndexMissReport(req);
 //        for (FaqIndexReportDto i : faqMissList) {
 //            FaqIndexReportDto target = getFaqIndexReportDtoByChannelId(i.getChannelId(), ret);

@@ -38,6 +38,21 @@
         <result column="reasonCnt" property="reasonCnt" javaType="long"/>
     </resultMap>
 
+    <select id="querySessionDetail" parameterType="Map" resultType="SessionDetailItemDto">
+        SELECT user_q userq,std_q stdq ,answer from chat_record
+        where 1=1
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <if test="sessionId != null">
+            and session_id = #{sessionId}
+        </if>
+        limit 10
+    </select>
+
 
     <select id="queryChatRecordAll" resultType="ChatRecordEntity" resultMap="ChatRecordMapping">
         SELECT * from chat_record
@@ -56,6 +71,7 @@
                 </foreach>
             </when>
         </choose>
+        limit 10
     </select>
 
 
