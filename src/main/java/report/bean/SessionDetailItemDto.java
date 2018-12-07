@@ -2,7 +2,17 @@ package report.bean;
 
 public class SessionDetailItemDto {
     private String userq;
+    private String stdq;
     private String answer;
+
+
+    public String getStdq() {
+        return stdq;
+    }
+
+    public void setStdq(String stdq) {
+        this.stdq = stdq;
+    }
 
     public String getUserq() {
         return userq;

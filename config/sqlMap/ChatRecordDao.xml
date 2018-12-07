@@ -38,7 +38,7 @@
         <result column="reasonCnt" property="reasonCnt" javaType="long"/>
     </resultMap>
 
-    <select id="querySessionDetail" parameterType="Map" resultType="SessionDetailItemDto">
+    <select id="querySessionDetail" parameterType="Map" resultType="SessionDetailItemDto" flushCache="true" useCache="false">
         SELECT user_q userq,std_q stdq ,answer from chat_record
         where 1=1
         <if test="beginDate != null">
@@ -50,7 +50,7 @@
         <if test="sessionId != null">
             and session_id = #{sessionId}
         </if>
-        limit 10
+        limit 100
     </select>
 
 
