@@ -1,13 +1,11 @@
 package report;
 
-import com.google.gson.Gson;
 import log.LoggerFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eclipse.jetty.util.StringUtil;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import report.bean.ReportResult;
 import report.bean.StaticRecordDto;
 import report.enums.ChannelIdNameEnums;
@@ -31,12 +29,12 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
     public static final String entryPoint = "/v1/sf/satisfyReport";
     public static final String listEntryPoint = "/v1/sf/satisfyReportList";
 
-    private String answerId;
+    private String bquestion;
 
     public ReportSatisfactionApiRequest(HttpServletRequest request) {
         super(request);
-        String answerIdrequest = request.getParameter("answerId");
-        if (HandlerUtilities.isValidParameter(answerIdrequest)) answerId = answerIdrequest;
+        String question = request.getParameter("bquesion");
+        if (HandlerUtilities.isValidSentence(question)) this.bquestion = question;
     }
 
 
@@ -66,11 +64,18 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             req.put("endDate", dateEndStr);
         }
 
+        if (StringUtil.isNotBlank(bquestion)) {
+            req.put("bquestion", bquestion);
+        }
+
+        if (!CollectionUtils.isEmpty(channelIds))
+            req.put("channnelId", channelIds);
 
         List<StaticRecordDto> ret = handler(req);
         for (StaticRecordDto itm : ret) {
             itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
         }
+        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
         result.setData(ret);
         return result;
     }

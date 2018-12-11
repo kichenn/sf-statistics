@@ -109,6 +109,9 @@
         <if test="endDate != null">
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
+        <if test="bquestion != null">
+            and bquestion = #{bquestion}
+        </if>
         <choose>
             <when test="channnelId != null">
                 and channel_id in
