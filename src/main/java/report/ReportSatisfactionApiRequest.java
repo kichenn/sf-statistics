@@ -72,7 +72,10 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             req.put("channnelId", channelIds);
 
         List<StaticRecordDto> ret = handler(req);
+
         for (StaticRecordDto itm : ret) {
+            itm.setDateBegin(dateBeginStr);
+            itm.setDateEnd(dateEndStr);
             itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
         }
         LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));

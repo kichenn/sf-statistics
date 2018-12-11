@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class HandlerUtilities {
     private static Pattern invalidIdPattern = Pattern.compile("[^a-zA-Z0-9: _-]", Pattern.CASE_INSENSITIVE);
-   private static String regex = "^[a-z0-9A-Z\u4e00-\u9fa5]+$";
+   private static String regex = "^[a-z0-9A-Z\u4e00-\u9fa5\\p{P}]+$";
 
 
     public static boolean isValidParameter(String param) {
