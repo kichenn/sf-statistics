@@ -11,6 +11,10 @@ abstract class BaseReportRequest {
     public static final String tmpDir = "/tmp";
     protected String dateBegin;
     protected String dateEnd;
+
+    protected Long dateBeginStr;
+    protected Long dateEndStr;
+
     protected String isForceNOCache;
     protected List<String> channelIds;
 
@@ -28,6 +32,14 @@ abstract class BaseReportRequest {
         }
         if (HandlerUtilities.isValidParameter(reqDateEnd)) {
             dateEnd = reqDateEnd;
+        }
+
+        if (HandlerUtilities.isValidParameter(request.getParameter("dateBeginLong"))) {
+            dateBeginStr = Long.valueOf(request.getParameter("dateBeginLong"));
+        }
+
+        if (HandlerUtilities.isValidParameter(request.getParameter("dateEndLong"))) {
+            dateEndStr = Long.valueOf(request.getParameter("dateEndLong"));
         }
 
         if (HandlerUtilities.isValidParameter(force)) {

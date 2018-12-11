@@ -104,7 +104,7 @@
         <dependency>
             <groupId>net.jodah</groupId>
             <artifactId>expiringmap</artifactId>
-            <version>0.3.1</version>
+            <version>0.5.8</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>

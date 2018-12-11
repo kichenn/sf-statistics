@@ -12,6 +12,10 @@ import java.util.Map;
 @MapperScan
 public interface IChatRecordDao {
 
+    List<TaskEngineInfoDomain> queryAllScenarioInfo();
+
+    List<ChatRecordEntity> exportSessionDetail(Map req);
+
     List<SessionDetailItemDto> querySessionDetail(Map req);
 
     List<ChatRecordEntity> queryChatRecordAll(Map req);

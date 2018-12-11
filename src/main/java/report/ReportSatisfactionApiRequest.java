@@ -5,12 +5,15 @@ import log.LoggerFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.eclipse.jetty.util.StringUtil;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import report.bean.ReportResult;
 import report.bean.StaticRecordDto;
 import report.enums.ChannelIdNameEnums;
 import report.enums.ReportResultEnums;
 import utils.DateTools;
+import utils.HandlerUtilities;
 import utils.MySQLHelper;
 import utils.StrUtils;
 
@@ -28,8 +31,12 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
     public static final String entryPoint = "/v1/sf/satisfyReport";
     public static final String listEntryPoint = "/v1/sf/satisfyReportList";
 
+    private String answerId;
+
     public ReportSatisfactionApiRequest(HttpServletRequest request) {
         super(request);
+        String answerIdrequest = request.getParameter("answerId");
+        if (HandlerUtilities.isValidParameter(answerIdrequest)) answerId = answerIdrequest;
     }
 
 
@@ -38,12 +45,12 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         Date beginDate = null;
         Date endDate = null;
         try {
-            beginDate = DateTools.str2DateNormal(dateBegin, DateTools.DateFormat.DATE_FORMAT_4_get);
-            endDate = DateTools.str2DateNormal(dateEnd, DateTools.DateFormat.DATE_FORMAT_4_get);
+            beginDate = new Date(dateBeginStr * 1000L);
+            endDate = new Date(dateEndStr * 1000L);
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
-        if (DateTools.gapDayOfTwo(beginDate, endDate) > 1L) {
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
             return new ReportResult(ReportResultEnums.DATE_SPAN_TOO_LONG);
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -58,11 +65,10 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             dateEndStr = formatter.format(endDate);
             req.put("endDate", dateEndStr);
         }
-        if (!CollectionUtils.isEmpty(channelIds))
-            req.put("channnelId", channelIds);
+
 
         List<StaticRecordDto> ret = handler(req);
-        for (StaticRecordDto itm : ret){
+        for (StaticRecordDto itm : ret) {
             itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
         }
         result.setData(ret);
@@ -101,13 +107,14 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             if (dateBegin != null && dateBegin.length() == 10) {
                 beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
             } else {
-                beginDate = DateTools.str2DateNormal(dateBegin, DateTools.DateFormat.DATE_FORMAT_4_get);
+                beginDate = new Date(this.dateBeginStr * 1000L);
+
             }
 
             if (dateEnd != null && dateEnd.length() == 10) {
                 endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
             } else {
-                endDate = DateTools.str2DateNormal(dateEnd, DateTools.DateFormat.DATE_FORMAT_4_get);
+                endDate = new Date(this.dateEndStr * 1000L);
             }
 
             if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {

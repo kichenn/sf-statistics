@@ -114,6 +114,10 @@ public class ControllerServlet {
                 SessionDetailRequest reportApiRequest = new SessionDetailRequest(request);
                 ReportResult reportResult = reportApiRequest.list();
                 setResponseInfo(response, new Gson().toJson(reportResult));
+            }else if (request.getRequestURI().equals(SessionDetailRequest.exportEntryPoint)) {
+
+                SessionDetailRequest reportApiRequest = new SessionDetailRequest(request);
+                reportApiRequest.process(request,response);
             } else {
                 setResponseInfo(response, otherAPIUrl(), "text/html;charset=utf-8");
             }

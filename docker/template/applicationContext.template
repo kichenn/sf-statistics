@@ -4,22 +4,23 @@
     xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:spring-beans-4.3.xsd
                            http://www.springframework.org/schema/context classpath:spring-context-4.3.xsd">
 
-    <bean id="backendLogDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-        <property name="driverClassName">
-            <value>com.mysql.cj.jdbc.Driver</value>
-        </property>
 
-        <property name="url" value="${EC_MYSQL_BACKEND_LOG_URL}"/>
-        <property name="username" value="${EC_MYSQL_BACKEND_LOG_USERNAME}"/>
-        <property name="password" value="${EC_MYSQL_BACKEND_LOG_PASSWORD}"/>
-        <property name="initialSize" value="${EC_MYSQL_BACKEND_LOG_INITIALSIZE}"/>
-        <property name="minIdle" value="${EC_MYSQL_BACKEND_LOG_MINIDLE}"/>
-        <property name="maxIdle" value="${EC_MYSQL_BACKEND_LOG_MAXIDLE}"/>
-        <property name="maxTotal" value="${EC_MYSQL_BACKEND_LOG_MAXTOTAL}"/>
-    </bean>
+
+    <bean id="emotibotDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+            <property name="driverClassName">
+                <value>com.mysql.cj.jdbc.Driver</value>
+            </property>
+            <property name="url" value="${EC_MYSQL_EMOTIBOT_URL}"/>
+            <property name="username" value="${EC_MYSQL_EMOTIBOT_USERNAME}"/>
+            <property name="password" value="${EC_MYSQL_EMOTIBOT_PASSWORD}"/>
+            <property name="initialSize" value="${EC_MYSQL_EMOTIBOT_INITIALSIZE}"/>
+            <property name="minIdle" value="${EC_MYSQL_EMOTIBOT_MINIDLE}"/>
+            <property name="maxIdle" value="${EC_MYSQL_EMOTIBOT_MAXIDLE}"/>
+            <property name="maxTotal" value="${EC_MYSQL_EMOTIBOT_MAXTOTAL}"/>
+        </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-            <property name="dataSource" ref="backendLogDataSource" />
+            <property name="dataSource" ref="emotibotDataSource" />
             <property name="configLocation" value="classpath:myBatis/SqlMapConfig.xml" />
         </bean>
 
@@ -29,11 +30,11 @@
         </bean>
 
     <bean id="backendLogJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="backendLogDataSource"></property>
+        <property name="dataSource" ref="emotibotDataSource"></property>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="backendLogDataSource"></property>
+        <property name="dataSource" ref="emotibotDataSource"></property>
     </bean>
 
 

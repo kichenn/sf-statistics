@@ -35,20 +35,24 @@ public class ReportApiRequest extends BaseReportRequest {
         Date beginDate = null;
         Date endDate = null;
         try {
-            beginDate = DateTools.str2DateNormal(dateBegin, DateTools.DateFormat.DATE_FORMAT_4_get);
-            endDate = DateTools.str2DateNormal(dateEnd, DateTools.DateFormat.DATE_FORMAT_4_get);
+            beginDate = new Date(dateBeginStr * 1000L);
+            endDate = new Date(dateEndStr * 1000L);
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
-        if (DateTools.gapDayOfTwo(beginDate, endDate) > 1L) {
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
             return new ReportResult(ReportResultEnums.DATE_SPAN_TOO_LONG);
         }
+        LoggerFactory.getLogger().info(String.format("[%s] input: begin:'%s',end:'%s'", this.getClass().getSimpleName(), beginDate.toString(),endDate.toString()));
 
-        List<CoreReportBean> ret = MySQLHelper.getInstance().getReportDao().queryReport(beginDate, endDate, null);
-        for (CoreReportBean itm : ret){
+
+        List<CoreReportBean> ret = MySQLHelper.getInstance().getReportDao().queryReport(beginDate, endDate, channelIds);
+        for (CoreReportBean itm : ret) {
             itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
         }
         result.setData(ret);
+        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
+
         return result;
     }
 
@@ -61,13 +65,13 @@ public class ReportApiRequest extends BaseReportRequest {
             if (dateBegin != null && dateBegin.length() == 10) {
                 beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
             } else {
-                beginDate = DateTools.str2DateNormal(dateBegin, DateTools.DateFormat.DATE_FORMAT_4_get);
+                beginDate = new Date(dateBeginStr * 1000L);
             }
 
             if (dateEnd != null && dateEnd.length() == 10) {
                 endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
             } else {
-                endDate = DateTools.str2DateNormal(dateEnd, DateTools.DateFormat.DATE_FORMAT_4_get);
+                endDate = new Date(dateEndStr * 1000L);
             }
             if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
                 return;

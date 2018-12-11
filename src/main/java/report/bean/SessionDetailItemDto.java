@@ -1,18 +1,29 @@
 package report.bean;
 
+import java.util.Date;
+
 public class SessionDetailItemDto {
     private String userq;
-    private String stdq;
     private String answer;
+    private Date createdTime;
+    private String createdTimeStr;
 
-
-    public String getStdq() {
-        return stdq;
+    public String getCreatedTimeStr() {
+        return createdTimeStr;
     }
 
-    public void setStdq(String stdq) {
-        this.stdq = stdq;
+    public void setCreatedTimeStr(String createdTimeStr) {
+        this.createdTimeStr = createdTimeStr;
     }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
 
     public String getUserq() {
         return userq;

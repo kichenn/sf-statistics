@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.logging.SimpleFormatter;
 
 public class DateTools {
 
@@ -19,6 +20,8 @@ public class DateTools {
         }
 
         private String format;
+
+
 
     }
 
@@ -63,5 +66,10 @@ public class DateTools {
         if (gapDay < 0L)
             gapDay = Math.abs(gapDay);
         return gapDay;
+    }
+
+    public static String date2Str(Date date,DateFormat format){
+        SimpleDateFormat formatter = new SimpleDateFormat(format.format);
+        return formatter.format(date);
     }
 }

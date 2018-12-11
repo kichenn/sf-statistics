@@ -16,7 +16,7 @@
         <result column="emotion" property="emotion" javaType="String"/>
         <result column="emotion_score" property="emotionScore" javaType="Integer"/>
         <result column="intent" property="intent" javaType="String"/>
-        <result column="intent_socre" property="intentScore" javaType="Integer"/>
+        <result column="intent_score" property="intentScore" javaType="Integer"/>
         <result column="created_time" property="createdTime" javaType="Date"/>
         <result column="log_time" property="logTime" javaType="String"/>
         <result column="score" property="score" javaType="Integer"/>
@@ -25,6 +25,7 @@
         <result column="unique_id" property="uniqueId" javaType="String"/>
         <result column="note" property="note" javaType="String"/>
         <result column="channelId" property="channelId" javaType="String"/>
+        <result column="scenario_id" property="scenarioId" javaType="String"/>
     </resultMap>
 
     <resultMap id="StaticRecordMapping" type="StaticRecordDto">
@@ -38,8 +39,28 @@
         <result column="reasonCnt" property="reasonCnt" javaType="long"/>
     </resultMap>
 
+    <select id="queryAllScenarioInfo" resultType="TaskEngineInfoDomain">
+        select scenarioID,userID,appID,content from emotibot.taskenginescenario
+    </select>
+
+    <select id="exportSessionDetail" parameterType="Map" resultType="ChatRecordEntity" resultMap="ChatRecordMapping" flushCache="true" useCache="false">
+        SELECT * from backend_log.chat_record
+        where 1=1
+        <if test="beginDate != null">
+            and created_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and created_time <![CDATA[  <= ]]> #{endDate}
+        </if>
+        <if test="sessionId != null">
+            and session_id = #{sessionId}
+        </if>
+        limit 1000
+    </select>
+
+
     <select id="querySessionDetail" parameterType="Map" resultType="SessionDetailItemDto" flushCache="true" useCache="false">
-        SELECT user_q userq,std_q stdq ,answer from chat_record
+        SELECT user_q userq,answer,created_time createdTime from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -55,7 +76,7 @@
 
 
     <select id="queryChatRecordAll" resultType="ChatRecordEntity" resultMap="ChatRecordMapping">
-        SELECT * from chat_record
+        SELECT * from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -80,7 +101,7 @@
         channel_id ,bquestion,answer_id,sum(case qa_solved when 0 then 1 when 1 then 1 else 0 end) as visitCnt,
         sum( case qa_solved when 0 then 1 else 0 end ) as unSolvedCnt,
         sum( case qa_solved when 1 then 1 else 0 end ) as solvedCnt
-        from static_record_info
+        from backend_log.static_record_info
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -103,7 +124,7 @@
             resultMap="StaticRecordMapping" flushCache="true" useCache="false">
         select
         channel_id ,bquestion,answer_id,reason,count(id) reasonCnt
-        from static_record_info
+        from backend_log.static_record_info
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -126,7 +147,7 @@
 
     <select id="queryTotalSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
         select   channelId, count(distinct session_id) as totalSessionNum
-        from chat_record where 1=1
+        from backend_log.chat_record where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -147,7 +168,7 @@
 
     <select id="queryValidSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
         select   channelId, count(distinct session_id) as validSessionNum
-        from chat_record
+        from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -171,7 +192,7 @@
 
     <select id="queryValidBusinessSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
         select   channelId, count(distinct session_id) as validBusinessSessionNum
-        from chat_record
+        from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -194,7 +215,7 @@
 
 
     <select id="queryAcsSession" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
-        select   channelId, count(distinct session_id) as acsSessionNum from chat_record
+        select   channelId, count(distinct session_id) as acsSessionNum from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -216,7 +237,7 @@
 
     <select id="queryTotalSessionMoreThanOne" parameterType="Map" resultType="CoreReportBean"  flushCache="true" useCache="false">
         select   channelId, count(distinct session_id) as validNoAcsSessionNum
-        from chat_record where 1=1
+        from backend_log.chat_record where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
         </if>
@@ -237,7 +258,7 @@
 
     <select id="queryInterActRound" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
         select   channelId,count(id)/count(distinct session_id) as interactRound
-        from chat_record
+        from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -261,7 +282,7 @@
     <select id="queryAverageConversionTime" parameterType="Map" resultType="CoreReportBean" flushCache="true" useCache="false">
         select  a.channelId, sum(a.conversionTime)/count(session_id) as averageConversionTime from
         (select  channelId,session_id , timestampdiff(second,min(created_time), (max(created_time))) as conversionTime
-        from chat_record where 1=1
+        from backend_log.chat_record where 1=1
         -- where user_q != 'welcome_tag'
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -288,7 +309,7 @@
         select channelId,session_id, case when count(id) > 10 then 11 else count(id) end as cnt,
         case when sum(case when module = 'ACS' then 1 else 0 end) > 0 then 'M'
         else 'NM' end as acsType
-        from chat_record
+        from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -345,7 +366,7 @@
         select channelId,session_id,hour(min(created_time)) as hourtime,
         case when  sum(case when module = 'ACS' then 1 else 0 end) > 0 then 'M'
         else 'NM' end as acsType
-        from chat_record
+        from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -408,7 +429,7 @@
         when timestampdiff(second,min(a.created_time),(max(a.created_time)))   <![CDATA[  <= ]]>   55 then 55
         when timestampdiff(second,min(a.created_time),(max(a.created_time)))    <![CDATA[  <= ]]>   60 then 60
         else 61 end as 'duringSecond'
-        from chat_record a
+        from backend_log.chat_record a
         where 1=1
         <if test="beginDate != null">
             and a.created_time >= #{beginDate}
@@ -435,7 +456,7 @@
 
 
     <select id="faqIndexTotalRoundReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
-        select channelId,count(id) totalRound from chat_record
+        select channelId,count(id) totalRound from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -457,7 +478,7 @@
 
 
     <select id="faqIndexMissReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
-        select channelId,count(id) faqMissNum from chat_record
+        select channelId,count(id) faqMissNum from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -480,7 +501,7 @@
 
     <select id="faqIndexDirectReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) directAnswerNum
-        from chat_record
+        from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}
@@ -505,7 +526,7 @@
 
     <select id="faqIndexRecommendReport" parameterType="Map" resultType="FaqIndexReportDto" flushCache="true" useCache="false">
         select channelId,count(id) recommendAnswerNum
-        from chat_record
+        from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}

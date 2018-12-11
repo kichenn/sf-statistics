@@ -1,6 +1,8 @@
 package handler;
 
+import com.google.gson.Gson;
 import org.junit.Test;
+import report.SessionDetailRequest;
 import report.bean.*;
 import utils.HandlerUtilities;
 import utils.MySQLHelper;
@@ -10,6 +12,7 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,6 +36,20 @@ public class HandlerUtilitiesTest {
         assertFalse(HandlerUtilities.isValidParameter(")"));
         assertFalse(HandlerUtilities.isValidParameter("<"));
         assertFalse(HandlerUtilities.isValidParameter(">"));
+    }
+
+    @Test
+    public void testsql(){
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("beginDate", "2018-12-10");
+        req.put("endDate", "2018-12-11");
+        req.put("sessionId","444664472343377235352321");
+
+//        List<ChatRecordEntity> ret = MySQLHelper.getInstance().getChatRecordDao().exportSessionDetail(req);
+
+        List<TaskEngineInfoDomain> ret = MySQLHelper.getInstance().getChatRecordDao().queryAllScenarioInfo();
+
+
     }
 
     @Test
