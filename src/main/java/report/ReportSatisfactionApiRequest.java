@@ -43,8 +43,8 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         Date beginDate = null;
         Date endDate = null;
         try {
-            beginDate = new Date(dateBeginStr * 1000L);
-            endDate = new Date(dateEndStr * 1000L);
+            beginDate = new Date(dateBeginStr );
+            endDate = new Date(dateEndStr );
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
@@ -115,14 +115,14 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             if (dateBegin != null && dateBegin.length() == 10) {
                 beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
             } else {
-                beginDate = new Date(this.dateBeginStr * 1000L);
+                beginDate = new Date(this.dateBeginStr );
 
             }
 
             if (dateEnd != null && dateEnd.length() == 10) {
                 endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
             } else {
-                endDate = new Date(this.dateEndStr * 1000L);
+                endDate = new Date(this.dateEndStr );
             }
 
             if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
