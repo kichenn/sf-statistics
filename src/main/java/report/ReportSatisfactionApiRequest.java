@@ -55,11 +55,11 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         HashMap<String, Object> req = new HashMap<String, Object>();
         String dateBeginStr = "";
         String dateEndStr = "";
-        if (dateBegin != null) {
+        if (beginDate != null) {
             dateBeginStr = formatter.format(beginDate);
             req.put("beginDate", dateBeginStr);
         }
-        if (dateEnd != null) {
+        if (endDate != null) {
             dateEndStr = formatter.format(endDate);
             req.put("endDate", dateEndStr);
         }

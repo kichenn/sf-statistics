@@ -188,7 +188,8 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag' and app_id = 'csbot'
+        and app_id = 'csbot'
+        and user_q != 'welcome_tag'
         group by channelId
     </select>
 
@@ -212,7 +213,9 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag' and module = 'faq' and app_id = 'csbot'
+        and app_id = 'csbot'
+        and user_q != 'welcome_tag'
+        and module = 'faq'
         group by channelId
     </select>
 
@@ -234,7 +237,8 @@
                 </foreach>
             </when>
         </choose>
-        and module = 'ACS' and app_id = 'csbot'
+        and app_id = 'csbot'
+        and module = 'ACS'
         group by channelId
     </select>
 
@@ -247,7 +251,9 @@
         <if test="endDate != null">
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
-        and user_q != 'welcome_tag' and module = 'ACS'  and app_id = 'csbot'
+        and app_id = 'csbot'
+        and user_q != 'welcome_tag'
+        and module = 'ACS'
         <choose>
             <when test="channnelId != null">
                 and channelId in
@@ -278,7 +284,8 @@
                 </foreach>
             </when>
         </choose>
-        and user_q != 'welcome_tag' and app_id = 'csbot'
+        and app_id = 'csbot'
+        and user_q != 'welcome_tag'
         group by channelId
     </select>
 

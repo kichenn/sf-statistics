@@ -46,6 +46,8 @@
 
         <property name="testOnBorrow" value="true"></property>
 
+        <property name="maxWaitMillis" value="1600"></property>
+        <property name="defaultAutoCommit" value="true"></property>
 
     </bean>
 

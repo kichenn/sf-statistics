@@ -18,6 +18,6 @@ cmd="docker build -t $DOCKER_IMAGE -f $DIR/Dockerfile $BUILDROOT"
 echo $cmd
 eval $cmd
 
-cmd="docker push $REPO/$CONTAINER"
-echo $cmd
-eval $cmd
+#cmd="docker push $REPO/$CONTAINER"
+#echo $cmd
+#eval $cmd
