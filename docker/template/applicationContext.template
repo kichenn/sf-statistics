@@ -17,6 +17,12 @@
             <property name="minIdle" value="${EC_MYSQL_EMOTIBOT_MINIDLE}"/>
             <property name="maxIdle" value="${EC_MYSQL_EMOTIBOT_MAXIDLE}"/>
             <property name="maxTotal" value="${EC_MYSQL_EMOTIBOT_MAXTOTAL}"/>
+
+
+            <property name="validationQuery" value="SELECT 1"></property>
+            <property name="testWhileIdle" value="true"></property>
+            <property name="testOnBorrow" value="true"></property>
+
         </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
