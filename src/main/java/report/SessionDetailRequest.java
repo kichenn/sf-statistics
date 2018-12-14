@@ -52,7 +52,7 @@ public class SessionDetailRequest extends BaseReportRequest {
         Date beginDate = null;
         Date endDate = null;
         try {
-            beginDate = new Date(dateEndStr);
+            beginDate = new Date(dateBeginStr);
             endDate = new Date(dateEndStr);
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
