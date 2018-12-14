@@ -65,11 +65,11 @@ public class SessionDetailRequest extends BaseReportRequest {
         String dateBeginStr = "";
         String dateEndStr = "";
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if (dateBegin != null) {
+        if (beginDate != null) {
             dateBeginStr = formatter.format(beginDate);
             req.put("beginDate", dateBeginStr);
         }
-        if (dateEnd != null) {
+        if (endDate != null) {
             dateEndStr = formatter.format(endDate);
             req.put("endDate", dateEndStr);
         }

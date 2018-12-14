@@ -6,24 +6,35 @@
 
 
 
-    <bean id="emotibotDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-            <property name="driverClassName">
-                <value>com.mysql.cj.jdbc.Driver</value>
-            </property>
-            <property name="url" value="${EC_MYSQL_EMOTIBOT_URL}"/>
-            <property name="username" value="${EC_MYSQL_EMOTIBOT_USERNAME}"/>
-            <property name="password" value="${EC_MYSQL_EMOTIBOT_PASSWORD}"/>
-            <property name="initialSize" value="${EC_MYSQL_EMOTIBOT_INITIALSIZE}"/>
-            <property name="minIdle" value="${EC_MYSQL_EMOTIBOT_MINIDLE}"/>
-            <property name="maxIdle" value="${EC_MYSQL_EMOTIBOT_MAXIDLE}"/>
-            <property name="maxTotal" value="${EC_MYSQL_EMOTIBOT_MAXTOTAL}"/>
+    <bean id="emotibotDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass">
+            <value>com.mysql.cj.jdbc.Driver</value>
+        </property>
+        <property name="jdbcUrl" value="${mysql.emotibot.url}"/>
+        <property name="user" value="${mysql.emotibot.username}"/>
+        <property name="password" value="${mysql.emotibot.password}"/>
+        <!-- 连接初始值，连接池启动时创建的连接数量的初始值  默认值是0 -->
+        <property name="initialPoolSize" value="${mysql.emotibot.initialSize}"/>
+        <!-- 最小空闲值.当空闲的连接数少于阀值时，连接池就会预申请去一些连接，以免洪峰来时来不及申请  默认值是0 -->
+        <property name="minPoolSize" value="${mysql.emotibot.minIdle}"/>
+        <!-- 最大空闲值.当经过一个高峰时间后，连接池可以慢慢将已经用不到的连接慢慢释放一部分，一直减少到maxIdle为止 ，0时无限制  默认值是8 -->
+        <property name="maxPoolSize" value="${mysql.emotibot.maxIdle}"/>
+        <!-- 连接池的最大值，同一时间可以从池分配的最多连接数量，0时无限制   默认值是8 -->
 
+        <property name="maxIdleTime">
+            <value>1600</value>
+        </property>
 
-            <property name="validationQuery" value="SELECT 1"></property>
-            <property name="testWhileIdle" value="true"></property>
-            <property name="testOnBorrow" value="true"></property>
-
-        </bean>
+        <property name="maxStatements">
+            <value>100</value>
+        </property>
+        <property name="numHelperThreads">
+            <value>10</value>
+        </property>
+        <property name="preferredTestQuery" value="SELECT 1"/>
+        <property name="idleConnectionTestPeriod" value="1600"/>
+        <property name="testConnectionOnCheckout" value="true"/>
+    </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
             <property name="dataSource" ref="emotibotDataSource" />
