@@ -57,7 +57,7 @@ public class SessionDetailRequest extends BaseReportRequest {
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
-        if (DateTools.gapDayOfTwo(beginDate, endDate) > 1L) {
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
             return new ReportResult(ReportResultEnums.DATE_SPAN_TOO_LONG);
         }
 
