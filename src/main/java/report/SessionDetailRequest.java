@@ -76,6 +76,7 @@ public class SessionDetailRequest extends BaseReportRequest {
         if (StringUtils.isNotBlank(sessionId)) {
             req.put("sessionId", sessionId);
         }
+        LoggerFactory.getLogger().info(String.format("[%s] input: '%s,  %s',%s", this.getClass().getSimpleName(), beginDate, endDate,sessionId));
 
         List<SessionDetailItemDto> ret = MySQLHelper.getInstance().getChatRecordDao().querySessionDetail(req);
         for (SessionDetailItemDto item : ret) {

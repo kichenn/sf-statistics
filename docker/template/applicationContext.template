@@ -10,13 +10,12 @@
         <property name="driverClass">
             <value>com.mysql.cj.jdbc.Driver</value>
         </property>
-        <property name="url" value="${EC_MYSQL_EMOTIBOT_URL}"/>
-         <property name="username" value="${EC_MYSQL_EMOTIBOT_USERNAME}"/>
+        <property name="jdbcUrl" value="${EC_MYSQL_EMOTIBOT_URL}"/>
+         <property name="user" value="${EC_MYSQL_EMOTIBOT_USERNAME}"/>
          <property name="password" value="${EC_MYSQL_EMOTIBOT_PASSWORD}"/>
-         <property name="initialSize" value="${EC_MYSQL_EMOTIBOT_INITIALSIZE}"/>
-         <property name="minIdle" value="${EC_MYSQL_EMOTIBOT_MINIDLE}"/>
-         <property name="maxIdle" value="${EC_MYSQL_EMOTIBOT_MAXIDLE}"/>
-         <property name="maxTotal" value="${EC_MYSQL_EMOTIBOT_MAXTOTAL}"/>
+         <property name="initialPoolSize" value="${EC_MYSQL_EMOTIBOT_INITIALSIZE}"/>
+         <property name="minPoolSize" value="${EC_MYSQL_EMOTIBOT_MINIDLE}"/>
+         <property name="maxPoolSize" value="${EC_MYSQL_EMOTIBOT_MAXIDLE}"/>
         <property name="maxIdleTime">
             <value>1600</value>
         </property>
