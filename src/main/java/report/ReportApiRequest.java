@@ -112,6 +112,12 @@ public class ReportApiRequest extends BaseReportRequest {
             c.add(Calendar.DATE, 1);
             iterator = c.getTime();
         }
+
+        if (!CollectionUtils.isEmpty(channelIds) && channelIds.size() > 0) {
+            String channel = channelIds.get(0);
+            ret = ret.stream().filter(a -> channel.equals(a.getChannelId())).collect(Collectors.toList());
+        }
+
         String title = "coreReport";
         Random random = new Random();
         String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) + "-" + random.nextInt(1000) + ".xls";
