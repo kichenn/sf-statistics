@@ -1,5 +1,7 @@
 package report.bean;
 
+import java.util.List;
+
 public class StaticRecordDto {
     private String dateBegin;
     private String dateEnd;
@@ -13,6 +15,15 @@ public class StaticRecordDto {
     private String reason;
     private Long reasonCnt;
 
+    List<StaticRecordDto> reasonInfo;
+
+    public List<StaticRecordDto> getReasonInfo() {
+        return reasonInfo;
+    }
+
+    public void setReasonInfo(List<StaticRecordDto> reasonInfo) {
+        this.reasonInfo = reasonInfo;
+    }
 
     public String getDateBegin() {
         return dateBegin;

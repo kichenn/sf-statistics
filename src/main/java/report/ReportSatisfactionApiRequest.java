@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +44,8 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         Date beginDate = null;
         Date endDate = null;
         try {
-            beginDate = new Date(dateBeginStr );
-            endDate = new Date(dateEndStr );
+            beginDate = new Date(dateBeginStr);
+            endDate = new Date(dateEndStr);
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
@@ -71,7 +72,7 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         if (!CollectionUtils.isEmpty(channelIds))
             req.put("channnelId", channelIds);
 
-        List<StaticRecordDto> ret = handler(req);
+        List<StaticRecordDto> ret = handlerList(req);
 
         for (StaticRecordDto itm : ret) {
             itm.setDateBegin(dateBeginStr);
@@ -84,10 +85,9 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
     }
 
 
-    private List<StaticRecordDto> handler(HashMap<String, Object> req) {
+    private List<StaticRecordDto> handlerList(HashMap<String, Object> req) {
         List<StaticRecordDto> list = MySQLHelper.getInstance().getChatRecordDao().queryStaticRecordInfo(req);
         List<StaticRecordDto> reasonInfo = MySQLHelper.getInstance().getChatRecordDao().queryStaticRecordReasonInfo(req);
-
         for (StaticRecordDto item : list) {
             List<StaticRecordDto> tmp = reasonInfo.stream().filter((StaticRecordDto i) -> i.getChannelId().equals(item.getChannelId())
                     && i.getAnswerId().equals(item.getAnswerId()) && i.getbQuestion().equals(item.getbQuestion()))
@@ -99,6 +99,23 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             item.setReason(sb.toString());
             item.setReasonCnt(null);
         }
+
+        return list;
+    }
+
+    private List<StaticRecordDto> handler(HashMap<String, Object> req) {
+        List<StaticRecordDto> list = MySQLHelper.getInstance().getChatRecordDao().queryStaticRecordInfo(req);
+        List<StaticRecordDto> reasonInfo = MySQLHelper.getInstance().getChatRecordDao().queryStaticRecordReasonInfo(req);
+        for (StaticRecordDto item : list) {
+            List<StaticRecordDto> tmp = reasonInfo.stream().filter((StaticRecordDto i) -> i.getChannelId().equals(item.getChannelId())
+                    && i.getAnswerId().equals(item.getAnswerId()) && i.getbQuestion().equals(item.getbQuestion()))
+                    .sorted(Comparator.comparing(StaticRecordDto::getReasonCnt).reversed())
+                    .collect(Collectors.toList());
+
+            item.setReasonInfo(tmp);
+
+        }
+
         return list;
     }
 
@@ -115,14 +132,14 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             if (dateBegin != null && dateBegin.length() == 10) {
                 beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
             } else {
-                beginDate = new Date(this.dateBeginStr );
+                beginDate = new Date(this.dateBeginStr);
 
             }
 
             if (dateEnd != null && dateEnd.length() == 10) {
                 endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
             } else {
-                endDate = new Date(this.dateEndStr );
+                endDate = new Date(this.dateEndStr);
             }
 
             if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
@@ -204,17 +221,35 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         if (data != null && data.size() > 0) {
 
             for (StaticRecordDto item : data) {
-                int i = 0;
-                HSSFRow lcell = sheet.createRow(line++);
-                lcell.createCell(i++).setCellValue(item.getDateBegin());
-                lcell.createCell(i++).setCellValue(item.getDateEnd());
-                lcell.createCell(i++).setCellValue(ChannelIdNameEnums.getChannelNameById(item.getChannelId()));
-                lcell.createCell(i++).setCellValue(item.getAnswerId());
-                lcell.createCell(i++).setCellValue(item.getbQuestion());
-                lcell.createCell(i++).setCellValue(item.getVisitCnt());
-                lcell.createCell(i++).setCellValue(item.getSolvedCnt());
-                lcell.createCell(i++).setCellValue(item.getUnSolvedCnt());
-                lcell.createCell(i).setCellValue(item.getReason());
+
+                if (item.getReasonInfo() != null && item.getReasonInfo().size() > 0) {
+
+                    for (StaticRecordDto reasonItem : item.getReasonInfo()) {
+                        int i = 0;
+                        HSSFRow lcell = sheet.createRow(line++);
+                        lcell.createCell(i++).setCellValue(item.getDateBegin());
+                        lcell.createCell(i++).setCellValue(item.getDateEnd());
+                        lcell.createCell(i++).setCellValue(ChannelIdNameEnums.getChannelNameById(item.getChannelId()));
+                        lcell.createCell(i++).setCellValue(item.getAnswerId());
+                        lcell.createCell(i++).setCellValue(item.getbQuestion());
+                        lcell.createCell(i++).setCellValue(item.getVisitCnt());
+                        lcell.createCell(i++).setCellValue(item.getSolvedCnt());
+                        lcell.createCell(i++).setCellValue(item.getUnSolvedCnt());
+                        lcell.createCell(i++).setCellValue(reasonItem.getReason());
+                        lcell.createCell(i++).setCellValue(reasonItem.getReasonCnt());
+                    }
+                } else {
+                    int i = 0;
+                    HSSFRow lcell = sheet.createRow(line++);
+                    lcell.createCell(i++).setCellValue(item.getDateBegin());
+                    lcell.createCell(i++).setCellValue(item.getDateEnd());
+                    lcell.createCell(i++).setCellValue(ChannelIdNameEnums.getChannelNameById(item.getChannelId()));
+                    lcell.createCell(i++).setCellValue(item.getAnswerId());
+                    lcell.createCell(i++).setCellValue(item.getbQuestion());
+                    lcell.createCell(i++).setCellValue(item.getVisitCnt());
+                    lcell.createCell(i++).setCellValue(item.getSolvedCnt());
+                    lcell.createCell(i++).setCellValue(item.getUnSolvedCnt());
+                }
             }
         }
         try {
@@ -243,8 +278,8 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         rowm.createCell(i++).setCellValue("访问量");
         rowm.createCell(i++).setCellValue("评价（有用）");
         rowm.createCell(i++).setCellValue("评价（无用）");
-        rowm.createCell(i).setCellValue("无用原因");
-
+        rowm.createCell(i++).setCellValue("不满意原因");
+        rowm.createCell(i++).setCellValue("不满意次数");
     }
 
 }
