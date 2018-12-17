@@ -22,13 +22,33 @@ public class DateTools {
         private String format;
 
 
-
     }
 
-    public static Date str2DateNormal(String datestr,DateFormat format) throws ParseException {
+    public static Date str2DateNormal(String datestr, DateFormat format) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(format.format);
         return sdf.parse(datestr);
     }
+
+
+    public static Date transDateBeginOrEnd(Date date, boolean beginOrEnd) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+
+        if (beginOrEnd) {
+            calendar.set(Calendar.HOUR, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+        } else {
+            calendar.set(Calendar.HOUR, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            calendar.set(Calendar.MILLISECOND, 999);
+        }
+        return calendar.getTime();
+
+    }
+
 
     public static Date str2Date(String datestr, DateFormat format, boolean beginOrEnd) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(format.format);
@@ -36,7 +56,6 @@ public class DateTools {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         if (beginOrEnd) {
-
             calendar.set(Calendar.HOUR, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
@@ -68,8 +87,10 @@ public class DateTools {
         return gapDay;
     }
 
-    public static String date2Str(Date date,DateFormat format){
+    public static String date2Str(Date date, DateFormat format) {
         SimpleDateFormat formatter = new SimpleDateFormat(format.format);
         return formatter.format(date);
     }
+
+
 }

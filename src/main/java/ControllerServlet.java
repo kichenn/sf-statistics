@@ -9,7 +9,9 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import report.*;
 import report.bean.ReportResult;
+import staticPart.RedisCache;
 import staticPart.ThreadPool;
+import task.TimerManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,6 +46,17 @@ public class ControllerServlet {
          * init place
          */
         ThreadPool.INSTANCE.init(minThreads, maxThreads, timeout);
+
+        /***
+         * 定时任务处理 报表
+         */
+        TimerManager.init();
+
+        /***
+         * redis 缓存启动
+         */
+        RedisCache.INSTANCE.init(configManager.getStr(Constants.REDIS_HOST), configManager.getInteger(Constants.REDIS_PORT), configManager.getInteger(Constants.REDIS_CONNECTION_TIMEOUT), configManager.getStr(Constants.REDIS_PASSWORD));
+
 
         /**
          * start service
@@ -104,20 +117,25 @@ public class ControllerServlet {
                 ReportApiRequest reportApiRequest = new ReportApiRequest(request);
                 ReportResult reportResult = reportApiRequest.list();
                 setResponseInfo(response, new Gson().toJson(reportResult));
+            } else if (request.getRequestURI().equals(ReportApiRequest.exportEntryPoint)) {
+
+                ReportApiRequest reportApiRequest = new ReportApiRequest(request);
+                reportApiRequest.list4download(response);
+
             } else if (request.getRequestURI().equals(ReportSatisfactionApiRequest.listEntryPoint)) {
 
                 ReportSatisfactionApiRequest reportApiRequest = new ReportSatisfactionApiRequest(request);
                 ReportResult reportResult = reportApiRequest.list();
                 setResponseInfo(response, new Gson().toJson(reportResult));
-            }else if (request.getRequestURI().equals(SessionDetailRequest.listEntryPoint)) {
+            } else if (request.getRequestURI().equals(SessionDetailRequest.listEntryPoint)) {
 
                 SessionDetailRequest reportApiRequest = new SessionDetailRequest(request);
                 ReportResult reportResult = reportApiRequest.list();
                 setResponseInfo(response, new Gson().toJson(reportResult));
-            }else if (request.getRequestURI().equals(SessionDetailRequest.exportEntryPoint)) {
+            } else if (request.getRequestURI().equals(SessionDetailRequest.exportEntryPoint)) {
 
                 SessionDetailRequest reportApiRequest = new SessionDetailRequest(request);
-                reportApiRequest.process(request,response);
+                reportApiRequest.process(request, response);
             } else {
                 setResponseInfo(response, otherAPIUrl(), "text/html;charset=utf-8");
             }

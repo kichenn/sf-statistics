@@ -1,14 +1,19 @@
 package report;
 
 import log.LoggerFactory;
+import net.sf.json.JSONObject;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.eclipse.jetty.util.StringUtil;
 import report.bean.CoreReportBean;
 import report.bean.ReportResult;
 import report.enums.ChannelIdNameEnums;
 import report.enums.ReportResultEnums;
+import staticPart.RedisCache;
+import task.CoreReportTask;
 import utils.DateTools;
+import utils.JSONUtils;
 import utils.MySQLHelper;
 import utils.StrUtils;
 
@@ -16,8 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class ReportApiRequest extends BaseReportRequest {
@@ -25,36 +29,100 @@ public class ReportApiRequest extends BaseReportRequest {
 
     public static final String listEntryPoint = "/v1/sf/coreReportList";
 
+    public static final String exportEntryPoint = "/v1/sf/exportCoreReport";
+
     public ReportApiRequest(HttpServletRequest request) {
         super(request);
     }
-
 
     public ReportResult list() {
         ReportResult result = new ReportResult(ReportResultEnums.SUCCESS);
         Date beginDate = null;
         Date endDate = null;
         try {
-            beginDate = new Date(dateBeginStr );
-            endDate = new Date(dateEndStr );
+            beginDate = new Date(dateBeginStr);
+            endDate = new Date(dateEndStr);
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
         if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
             return new ReportResult(ReportResultEnums.DATE_SPAN_TOO_LONG);
         }
-        LoggerFactory.getLogger().info(String.format("[%s] input: begin:'%s',end:'%s'", this.getClass().getSimpleName(), beginDate.toString(),endDate.toString()));
-
-
-        List<CoreReportBean> ret = MySQLHelper.getInstance().getReportDao().queryReport(beginDate, endDate, channelIds);
-        for (CoreReportBean itm : ret) {
-            itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
+        LoggerFactory.getLogger().info(String.format("[%s] input: begin:'%s',end:'%s'", this.getClass().getSimpleName(), beginDate.toString(), endDate.toString()));
+        Calendar c = Calendar.getInstance();
+        Date iterator = beginDate;
+        List<CoreReportBean> ret = new ArrayList<>();
+        while (iterator.before(endDate)) {
+            LoggerFactory.getLogger().debug("corereport:date:" + iterator.toString());
+            String data = RedisCache.INSTANCE.get(CoreReportTask.generateKey(iterator));
+            LoggerFactory.getLogger().debug("cache:" + data);
+            if (StringUtil.isBlank(data)) {
+                List<CoreReportBean> dayReport = CoreReportTask.doQueryDayReport(iterator);
+                ret.addAll(dayReport);
+            } else {
+                List dayReport = JSONUtils.jsonToList(data, CoreReportBean.class);
+                ret.addAll(dayReport);
+            }
+            c.setTime(iterator);
+            c.add(Calendar.DATE, 1);
+            iterator = c.getTime();
         }
+
         result.setData(ret);
         LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
-
         return result;
     }
+
+    public void list4download(HttpServletResponse response) {
+        Date beginDate = null;
+        Date endDate = null;
+        try {
+            beginDate = new Date(dateBeginStr);
+            endDate = new Date(dateEndStr);
+        } catch (Exception e) {
+            return;
+        }
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
+            return;
+        }
+        LoggerFactory.getLogger().info(String.format("[%s] input: begin:'%s',end:'%s'", this.getClass().getSimpleName(), beginDate.toString(), endDate.toString()));
+        Calendar c = Calendar.getInstance();
+        Date iterator = beginDate;
+        List<CoreReportBean> ret = new ArrayList<>();
+        while (iterator.before(endDate)) {
+            String data = RedisCache.INSTANCE.get(CoreReportTask.generateKey(iterator));
+            if (StringUtil.isBlank(data)) {
+                List<CoreReportBean> dayReport = CoreReportTask.doQueryDayReport(iterator);
+                ret.addAll(dayReport);
+            } else {
+                List dayReport = JSONUtils.jsonToList(data, CoreReportBean.class);
+                ret.addAll(dayReport);
+            }
+            c.setTime(iterator);
+            c.add(Calendar.DATE, 1);
+            iterator = c.getTime();
+        }
+        String title = "coreReport";
+        Random random = new Random();
+        String fileName = title + "-" + DateTools.contructDaySpanStr(beginDate, endDate) + "-" + random.nextInt(1000) + ".xls";
+        String fileNamePath = tmpDir + "/" + fileName;
+        saveExcel(title, fileNamePath, ret);
+        LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
+        response.setHeader("content-disposition", "attachment;filename=" + fileName);
+        try {
+            InputStream in = new FileInputStream(fileNamePath);
+            int len = 0;
+            byte[] buffer = new byte[1024];
+            OutputStream out = response.getOutputStream();
+            while ((len = in.read(buffer)) > 0) {
+                out.write(buffer, 0, len);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void process(HttpServletRequest request, HttpServletResponse response) {
 
@@ -65,13 +133,13 @@ public class ReportApiRequest extends BaseReportRequest {
             if (dateBegin != null && dateBegin.length() == 10) {
                 beginDate = DateTools.str2Date(dateBegin, DateTools.DateFormat.DATE_FORMAT_request_day, true);
             } else {
-                beginDate = new Date(dateBeginStr );
+                beginDate = new Date(dateBeginStr);
             }
 
             if (dateEnd != null && dateEnd.length() == 10) {
                 endDate = DateTools.str2Date(dateEnd, DateTools.DateFormat.DATE_FORMAT_request_day, false);
             } else {
-                endDate = new Date(dateEndStr );
+                endDate = new Date(dateEndStr);
             }
             if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
                 return;

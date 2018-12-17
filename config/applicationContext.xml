@@ -2,8 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:spring-beans-4.3.xsd
-                           http://www.springframework.org/schema/context classpath:spring-context-4.3.xsd">
+                           http://www.springframework.org/schema/context classpath:spring-context-4.3.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
     <!-- 加载mysql的属性配置文件 -->
     <context:property-placeholder location="classpath:mysql.properties"/>
 
@@ -80,6 +81,8 @@
     <bean id="reportDao" class="dao.ReportImp">
         <property name="jdbcTemplate" ref="backendLogJdbcTemplate"></property>
     </bean>
+
+
 
 
 </beans>
