@@ -6,6 +6,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eclipse.jetty.util.StringUtil;
+import org.springframework.util.CollectionUtils;
 import report.bean.CoreReportBean;
 import report.bean.ReportResult;
 import report.enums.ChannelIdNameEnums;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class ReportApiRequest extends BaseReportRequest {
@@ -66,6 +68,14 @@ public class ReportApiRequest extends BaseReportRequest {
             c.setTime(iterator);
             c.add(Calendar.DATE, 1);
             iterator = c.getTime();
+        }
+
+        if (!CollectionUtils.isEmpty(channelIds) && channelIds.size() > 0) {
+            String channel = channelIds.get(0);
+            ret = ret.stream().filter(a -> channel.equals(a.getChannelId())).collect(Collectors.toList());
+        }
+        for (CoreReportBean itm : ret) {
+            itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
         }
 
         result.setData(ret);

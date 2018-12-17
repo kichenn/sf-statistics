@@ -8,6 +8,7 @@ public class SessionDetailItemDto {
 
     private String createdTimeStr;
 
+
     public String getCreatedTimeStr() {
         return createdTimeStr;
     }
