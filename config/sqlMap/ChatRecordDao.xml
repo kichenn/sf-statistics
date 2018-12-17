@@ -60,7 +60,7 @@
 
 
     <select id="querySessionDetail" parameterType="Map" resultType="SessionDetailItemDto" flushCache="true" useCache="false">
-        SELECT user_q userq,answer,created_time createdTime from backend_log.chat_record
+        SELECT user_q userq,answer,created_time createdTimeStr from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
             and created_time >= #{beginDate}

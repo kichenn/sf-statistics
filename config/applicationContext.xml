@@ -47,12 +47,12 @@
         <property name="maxPoolSize" value="${mysql.emotibot.maxIdle}"/>
         <!-- 连接池的最大值，同一时间可以从池分配的最多连接数量，0时无限制   默认值是8 -->
 
-        <property name="maxIdleTime" value="1600"/>
-        <property name="automaticTestTable" value="C3P0TestTable"/>
+        <property name="maxIdleTime" value="1000"/>
+        <!--<property name="automaticTestTable" value="C3P0TestTable"/> -->
         <property name="preferredTestQuery" value="SELECT 1"/>
-        <property name="idleConnectionTestPeriod" value="500"/>
-        <property name="testConnectionOnCheckout" value="false"/>
-        <property name="testConnectionOnCheckin" value="true"/>
+        <property name="idleConnectionTestPeriod" value="700"/>
+        <property name="testConnectionOnCheckout" value="true"/>
+        <!--<property name="testConnectionOnCheckin" value="true"/>-->
     </bean>
 
 

@@ -80,8 +80,6 @@ public class SessionDetailRequest extends BaseReportRequest {
 
         List<SessionDetailItemDto> ret = MySQLHelper.getInstance().getChatRecordDao().querySessionDetail(req);
         for (SessionDetailItemDto item : ret) {
-            item.setCreatedTimeStr(DateTools.date2Str(item.getCreatedTime(),DateTools.DateFormat.DATE_FORMAT_stand));
-            item.setCreatedTime(null);
             item.setAnswer(extractAnswerData(item.getAnswer()));
         }
         result.setData(ret);

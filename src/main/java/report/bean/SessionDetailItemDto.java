@@ -5,7 +5,7 @@ import java.util.Date;
 public class SessionDetailItemDto {
     private String userq;
     private String answer;
-    private Date createdTime;
+
     private String createdTimeStr;
 
     public String getCreatedTimeStr() {
@@ -14,14 +14,6 @@ public class SessionDetailItemDto {
 
     public void setCreatedTimeStr(String createdTimeStr) {
         this.createdTimeStr = createdTimeStr;
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
     }
 
 
