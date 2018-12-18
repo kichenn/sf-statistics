@@ -10,6 +10,7 @@ import report.bean.ReportResult;
 import report.bean.StaticRecordDto;
 import report.enums.ChannelIdNameEnums;
 import report.enums.ReportResultEnums;
+import staticPart.RedisCache;
 import utils.DateTools;
 import utils.HandlerUtilities;
 import utils.MySQLHelper;
@@ -40,6 +41,7 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
 
 
     public ReportResult list() {
+
         ReportResult result = new ReportResult(ReportResultEnums.SUCCESS);
         Date beginDate = null;
         Date endDate = null;
@@ -72,7 +74,12 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         if (!CollectionUtils.isEmpty(channelIds))
             req.put("channnelId", channelIds);
 
+        if(!RedisCache.INSTANCE.tryGetDistributedLock(getClass().getSimpleName(), "", 100000)){
+            LoggerFactory.getLogger().info("请求频繁");
+            return new ReportResult(ReportResultEnums.REQUEST_TOO_FREQUENT);
+        }
         List<StaticRecordDto> ret = handlerList(req);
+        RedisCache.INSTANCE.releaseDistributedLock(getClass().getSimpleName(), "");
 
         for (StaticRecordDto itm : ret) {
             itm.setDateBegin(dateBeginStr);
