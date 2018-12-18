@@ -74,12 +74,8 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
         if (!CollectionUtils.isEmpty(channelIds))
             req.put("channnelId", channelIds);
 
-        if(!RedisCache.INSTANCE.tryGetDistributedLock(getClass().getSimpleName(), "", 100000)){
-            LoggerFactory.getLogger().info("请求频繁");
-            return new ReportResult(ReportResultEnums.REQUEST_TOO_FREQUENT);
-        }
+
         List<StaticRecordDto> ret = handlerList(req);
-        RedisCache.INSTANCE.releaseDistributedLock(getClass().getSimpleName(), "");
 
         for (StaticRecordDto itm : ret) {
             itm.setDateBegin(dateBeginStr);
