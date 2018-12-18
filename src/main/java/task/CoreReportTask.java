@@ -2,9 +2,11 @@ package task;
 
 
 import com.google.gson.Gson;
+import config.ConfigManagedService;
+import config.Constants;
+import org.eclipse.jetty.util.StringUtil;
 import report.bean.CoreReportBean;
 import staticPart.RedisCache;
-import type.sentence.ShunfengSentence;
 import utils.DateTools;
 import utils.MySQLHelper;
 
@@ -25,7 +27,27 @@ public class CoreReportTask extends TimerTask {
         calendar.setTime(new Date());
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
         Date yestoday = calendar.getTime();
+
         doQueryDayReport(yestoday);
+
+    }
+
+    /***
+     *
+     */
+    public void preInit(int reportTimeInterval) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        for (int i = 1; i <= reportTimeInterval; i++) {
+            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+            Date target = calendar.getTime();
+            System.out.println(target.toString());
+            String data = RedisCache.INSTANCE.get(CoreReportTask.generateKey(target));
+            if (StringUtil.isBlank(data))
+                doQueryDayReport(target);
+
+
+        }
 
     }
 
@@ -48,4 +70,7 @@ public class CoreReportTask extends TimerTask {
     }
 
 
+    public static void main(String[] args) {
+        new CoreReportTask().preInit(5);
+    }
 }

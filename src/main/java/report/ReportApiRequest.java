@@ -1,7 +1,8 @@
 package report;
 
+import config.ConfigManagedService;
+import config.Constants;
 import log.LoggerFactory;
-import net.sf.json.JSONObject;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -17,7 +18,6 @@ import utils.DateTools;
 import utils.JSONUtils;
 import utils.MySQLHelper;
 import utils.StrUtils;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -33,6 +33,8 @@ public class ReportApiRequest extends BaseReportRequest {
 
     public static final String exportEntryPoint = "/v1/sf/exportCoreReport";
 
+    private static int reportTimeInterval = ConfigManagedService.getConfig().getInteger(Constants.REPORT_TIME_INTERVAL);
+
     public ReportApiRequest(HttpServletRequest request) {
         super(request);
     }
@@ -47,7 +49,7 @@ public class ReportApiRequest extends BaseReportRequest {
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
-        if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > reportTimeInterval) {
             return new ReportResult(ReportResultEnums.DATE_SPAN_TOO_LONG);
         }
         LoggerFactory.getLogger().info(String.format("[%s] input: begin:'%s',end:'%s'", this.getClass().getSimpleName(), beginDate.toString(), endDate.toString()));
@@ -71,8 +73,7 @@ public class ReportApiRequest extends BaseReportRequest {
         }
 
         if (!CollectionUtils.isEmpty(channelIds) && channelIds.size() > 0) {
-            String channel = channelIds.get(0);
-            ret = ret.stream().filter(a -> channel.equals(a.getChannelId())).collect(Collectors.toList());
+            ret = ret.stream().filter(a -> channelIds.contains(a.getChannelId())).collect(Collectors.toList());
         }
         for (CoreReportBean itm : ret) {
             itm.setChannelId(ChannelIdNameEnums.getChannelNameById(itm.getChannelId()));
@@ -92,7 +93,7 @@ public class ReportApiRequest extends BaseReportRequest {
         } catch (Exception e) {
             return;
         }
-        if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > reportTimeInterval) {
             return;
         }
         LoggerFactory.getLogger().info(String.format("[%s] input: begin:'%s',end:'%s'", this.getClass().getSimpleName(), beginDate.toString(), endDate.toString()));
@@ -114,8 +115,7 @@ public class ReportApiRequest extends BaseReportRequest {
         }
 
         if (!CollectionUtils.isEmpty(channelIds) && channelIds.size() > 0) {
-            String channel = channelIds.get(0);
-            ret = ret.stream().filter(a -> channel.equals(a.getChannelId())).collect(Collectors.toList());
+            ret = ret.stream().filter(a -> channelIds.contains(a.getChannelId())).collect(Collectors.toList());
         }
 
         String title = "coreReport";

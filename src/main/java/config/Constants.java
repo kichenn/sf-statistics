@@ -78,6 +78,10 @@ public interface Constants {
     String FAQ_THRESHOLD0 = "faqThreshold0";
     String FAQ_THRESHOLD1 = "faqThreshold1";
     String FAQ_THRESHOLD2 = "faqThreshold2";
+
+    String REPORT_TIME_INTERVAL = "reportTimeInterval";
+
+    String REPORT_RUN_TIME = "reportRunTime";
  
     String CHAT_THRESHOLD = "chatThreshold";
     String KNOWLEDGE_THRESHOLD = "knowledgeThreshold";

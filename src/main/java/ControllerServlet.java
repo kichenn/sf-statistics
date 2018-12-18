@@ -47,16 +47,18 @@ public class ControllerServlet {
          */
         ThreadPool.INSTANCE.init(minThreads, maxThreads, timeout);
 
-        /***
-         * 定时任务处理 报表
-         */
-        TimerManager.init();
+
 
         /***
          * redis 缓存启动
          */
         RedisCache.INSTANCE.init(configManager.getStr(Constants.REDIS_HOST), configManager.getInteger(Constants.REDIS_PORT), configManager.getInteger(Constants.REDIS_CONNECTION_TIMEOUT), configManager.getStr(Constants.REDIS_PASSWORD));
 
+
+        /***
+         * 定时任务处理 报表
+         */
+        TimerManager.init();
 
         /**
          * start service
