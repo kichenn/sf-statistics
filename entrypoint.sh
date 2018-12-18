@@ -58,6 +58,10 @@ echo "faqThreshold0=$EC_RANKER_FAQ_THRESHOLD0" >> $configfile
 echo "faqThreshold1=$EC_RANKER_FAQ_THRESHOLD1" >> $configfile
 echo "faqThreshold2=$EC_RANKER_FAQ_THRESHOLD2" >> $configfile
 
+echo "reportTimeInterval=$EC_REPORT_TIME_INTERVAL" >> $configfile
+echo "reportRunTime=$EC_REPORT_RUN_TIME" >> $configfile
+
+
 echo "chatThreshold=$EC_RANKER_CHAT_THRESHOLD" >> $configfile
 
 echo "knowledgeThreshold=$EC_RANKER_CHAT_THRESHOLD" >> $configfile
