@@ -160,6 +160,11 @@ public class ReportSatisfactionApiRequest extends BaseReportRequest {
             dateEndStr = formatter.format(endDate);
             req.put("endDate", dateEndStr);
         }
+
+        if (StringUtil.isNotBlank(bquestion)) {
+            req.put("bquestion", bquestion);
+        }
+
         if (!CollectionUtils.isEmpty(channelIds))
             req.put("channnelId", channelIds);
 

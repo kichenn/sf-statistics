@@ -202,7 +202,6 @@ public class SessionDetailRequest extends BaseReportRequest {
                 if (json == null) continue;
                 JSONObject metadata = (JSONObject) json.get("metadata");
                 if (metadata == null) continue;
-                LoggerFactory.getLogger().info("场景数据:" + item.getScenarioID());
                 scenarioIdNameMap.put(item.getScenarioID(), metadata.getString("scenario_name"));
                 return metadata.getString("scenario_name");
             }
