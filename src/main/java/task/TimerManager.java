@@ -6,6 +6,7 @@ import log.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.Timer;
 
 
@@ -25,8 +26,10 @@ public class TimerManager {
 
     public TimerManager() {
         Calendar calendar = Calendar.getInstance();
+        Random random = new Random();
+        int min = random.nextInt(60);
         calendar.set(Calendar.HOUR_OF_DAY, reportRunTime);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MINUTE, min);
         calendar.set(Calendar.SECOND, 0);
         Date date = calendar.getTime();
         if (date.before(new Date())) {
@@ -35,7 +38,7 @@ public class TimerManager {
         Timer timer = new Timer();
         CoreReportTask task = new CoreReportTask();
         task.preInit(reportTimeInterval);
-        LoggerFactory.getLogger().info("定时任务启动");
+        LoggerFactory.getLogger().info(String.format("定时任务启动:%s 时 %s 分", reportRunTime, min));
         timer.schedule(task, date, PERIOD_DAY);
     }
 

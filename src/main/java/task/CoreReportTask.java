@@ -2,8 +2,7 @@ package task;
 
 
 import com.google.gson.Gson;
-import config.ConfigManagedService;
-import config.Constants;
+import log.LoggerFactory;
 import org.eclipse.jetty.util.StringUtil;
 import report.bean.CoreReportBean;
 import staticPart.RedisCache;
@@ -22,6 +21,10 @@ public class CoreReportTask extends TimerTask {
     private static final String coreReportKeyPre = "csbot:corereport:";
 
     public void run() {
+        if (!RedisCache.INSTANCE.tryGetDistributedLock(getClass().getSimpleName(), "", 60 * 60)) {
+            LoggerFactory.getLogger().info("获取定时任务锁失败");
+            return;
+        }
         // 获取 昨天的 日报表
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
@@ -29,6 +32,8 @@ public class CoreReportTask extends TimerTask {
         Date yestoday = calendar.getTime();
 
         doQueryDayReport(yestoday);
+
+        RedisCache.INSTANCE.releaseDistributedLock(getClass().getSimpleName(), "");
 
     }
 
@@ -67,10 +72,5 @@ public class CoreReportTask extends TimerTask {
             e.printStackTrace();
         }
         return ret;
-    }
-
-
-    public static void main(String[] args) {
-        new CoreReportTask().preInit(5);
     }
 }
