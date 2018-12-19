@@ -162,7 +162,6 @@ public class SessionDetailRequest extends BaseReportRequest {
                 lcell.createCell(i++).setCellValue(item.getUserId());
                 lcell.createCell(i++).setCellValue(item.getUserQ());
                 lcell.createCell(i++).setCellValue(item.getStdQ());
-                lcell.createCell(i++).setCellValue(StringUtils.isNotBlank(item.getScenarioId()) ? extractScenarioNameInfo(item.getScenarioId()) : "");
                 lcell.createCell(i++).setCellValue("intent");
                 lcell.createCell(i++).setCellValue(extractAnswerData(item.getAnswer()));
                 lcell.createCell(i++).setCellValue(item.getScore());

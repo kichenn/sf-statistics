@@ -24,16 +24,10 @@ public class ChatRecordEntity {
     private String uniqueId;
     private String note;
     private String channelId;
-    private String scenarioId;
 
 
-    public String getScenarioId() {
-        return scenarioId;
-    }
 
-    public void setScenarioId(String scenarioId) {
-        this.scenarioId = scenarioId;
-    }
+
 
     public String getSessionId() {
         return sessionId;
