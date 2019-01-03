@@ -7,6 +7,7 @@ import org.eclipse.jetty.util.StringUtil;
 import report.bean.CoreReportBean;
 import staticPart.RedisCache;
 import utils.DateTools;
+import utils.JSONUtils;
 import utils.MySQLHelper;
 
 import java.text.ParseException;
@@ -67,10 +68,14 @@ public class CoreReportTask extends TimerTask {
             ret = MySQLHelper.getInstance().getReportDao().queryReport(DateTools.str2Date(dateStr, DateTools.DateFormat.DATE_FORMAT_request_day, true),
                     DateTools.str2Date(dateStr, DateTools.DateFormat.DATE_FORMAT_request_day, false),
                     null);
-            RedisCache.INSTANCE.put(generateKey(date), new Gson().toJson(ret), 7 * PERIOD_DAY);
+
+            if (ret != null) {
+                RedisCache.INSTANCE.put(generateKey(date), new Gson().toJson(ret), 7 * PERIOD_DAY);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return ret;
     }
+
 }

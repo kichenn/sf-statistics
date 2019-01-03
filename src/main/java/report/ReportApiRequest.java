@@ -18,6 +18,7 @@ import utils.DateTools;
 import utils.JSONUtils;
 import utils.MySQLHelper;
 import utils.StrUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -62,10 +63,17 @@ public class ReportApiRequest extends BaseReportRequest {
             LoggerFactory.getLogger().debug("cache:" + data);
             if (StringUtil.isBlank(data)) {
                 List<CoreReportBean> dayReport = CoreReportTask.doQueryDayReport(iterator);
-                ret.addAll(dayReport);
+                if (dayReport != null) {
+                    ret.addAll(dayReport);
+                }
             } else {
-                List dayReport = JSONUtils.jsonToList(data, CoreReportBean.class);
-                ret.addAll(dayReport);
+                try {
+                    List dayReport = JSONUtils.jsonToList(data, CoreReportBean.class);
+                    ret.addAll(dayReport);
+                } catch (Exception e) {
+                    LoggerFactory.getLogger().debug(e.getMessage());
+                }
+
             }
             c.setTime(iterator);
             c.add(Calendar.DATE, 1);
