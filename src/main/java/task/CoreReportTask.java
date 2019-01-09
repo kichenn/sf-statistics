@@ -32,8 +32,11 @@ public class CoreReportTask extends TimerTask {
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
         Date yestoday = calendar.getTime();
 
-        doQueryDayReport(yestoday);
+        String data = RedisCache.INSTANCE.get(CoreReportTask.generateKey(yestoday));
 
+        if (StringUtil.isBlank(data)) {
+            doQueryDayReport(yestoday);
+        }
         RedisCache.INSTANCE.releaseDistributedLock(getClass().getSimpleName(), "");
 
     }
