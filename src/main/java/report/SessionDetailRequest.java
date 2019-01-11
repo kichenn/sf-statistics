@@ -17,6 +17,7 @@ import utils.DateTools;
 import utils.HandlerUtilities;
 import utils.MySQLHelper;
 import utils.StrUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -57,7 +58,7 @@ public class SessionDetailRequest extends BaseReportRequest {
         } catch (Exception e) {
             return new ReportResult(ReportResultEnums.DATE_PARSE_EXCEPTION);
         }
-        if (DateTools.gapDayOfTwo(beginDate, endDate) > 7L) {
+        if (DateTools.gapDayOfTwo(beginDate, endDate) > 6 * 30L) {
             return new ReportResult(ReportResultEnums.DATE_SPAN_TOO_LONG);
         }
 
@@ -76,7 +77,7 @@ public class SessionDetailRequest extends BaseReportRequest {
         if (StringUtils.isNotBlank(sessionId)) {
             req.put("sessionId", sessionId);
         }
-        LoggerFactory.getLogger().info(String.format("[%s] input: '%s,  %s',%s", this.getClass().getSimpleName(), beginDate, endDate,sessionId));
+        LoggerFactory.getLogger().info(String.format("[%s] input: '%s,  %s',%s", this.getClass().getSimpleName(), beginDate, endDate, sessionId));
 
         List<SessionDetailItemDto> ret = MySQLHelper.getInstance().getChatRecordDao().querySessionDetail(req);
         for (SessionDetailItemDto item : ret) {
