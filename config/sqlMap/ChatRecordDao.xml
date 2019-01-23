@@ -215,7 +215,7 @@
         </choose>
         and app_id = 'csbot'
         and user_q != 'welcome_tag'
-        and module = 'faq'
+        and module in ('faq','task_engine_emotibot','task_engine_dm','task_engine')
         group by channelId
     </select>
 
