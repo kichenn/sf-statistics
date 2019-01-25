@@ -10,9 +10,8 @@ import utils.MySQLHelper;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -53,6 +52,17 @@ public class HandlerUtilitiesTest {
     }
 
     @Test
+    public void testValidNoAcsSessionNum() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date b =  sdf.parse("2019-01-24 00:00:00");
+        Date e = sdf.parse("2019-01-25 00:00:00");
+        List<String> targetChannelIds = new ArrayList<>();
+        targetChannelIds.add("719");
+        List<CoreReportBean> ret =  MySQLHelper.getInstance().getReportDao().queryReport(b,e,targetChannelIds);
+        System.out.println(new Gson().toJson(ret));
+    }
+
+    @Test
     public void reportTest() throws ParseException {
 //        Date today = new Date();
 //        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
@@ -60,9 +70,11 @@ public class HandlerUtilitiesTest {
 //        DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00");
 //        System.out.println(dateString);
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        Date b =  sdf.parse("2018-11-06 15:51:27");
-//        Date e = sdf.parse("2018-11-06 15:52:50");
-////        MySQLHelper.getInstance().getReportDao().queryReport(b,e,null);
+//        Date b =  sdf.parse("2019-01-23 00:00:00");
+//        Date e = sdf.parse("2019-01-24 00:00:00");
+//        List<String> targetChannelIds = new ArrayList<>();
+//        targetChannelIds.add("376");
+//        MySQLHelper.getInstance().getReportDao().queryReport(b,e,targetChannelIds);
 
 //        ReportApiRequest reportApiRequest = new ReportApiRequest(null);
 //        List<CoreReportBean> data = new ArrayList<>();

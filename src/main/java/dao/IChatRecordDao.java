@@ -32,7 +32,11 @@ public interface IChatRecordDao {
 
     List<CoreReportBean> queryAcsSession(Map req);
 
+    @Deprecated
     List<CoreReportBean> queryTotalSessionMoreThanOne(Map req);
+
+
+    List<CoreReportBean> queryValidNoAcsBussinessNum(Map req);
 
     List<CoreReportBean> queryInterActRound(Map req);
 

@@ -141,10 +141,9 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
             List<CoreReportBean> validNoAcsSessionBeanList = calculateValidNoAcsSession(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
                 CoreReportBean tmp = getBeanByChannelId(validNoAcsSessionBeanList, item.getChannelId());
-                int tmpValidNoAcsNum = 0;
                 if (tmp != null)
-                    tmpValidNoAcsNum = tmp.getValidNoAcsSessionNum();
-                item.setValidNoAcsSessionNum(item.getValidBusinessSessionNum() - tmpValidNoAcsNum);
+                    item.setValidNoAcsSessionNum(tmp.getValidNoAcsSessionNum());
+
             }
             List<CoreReportBean> interactRoundBeanList = calculateInteractRound(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
@@ -213,7 +212,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
         req.put("beginDate", dateBegin);
         req.put("endDate", dateEnd);
         req.put("channnelId", channelIdList);
-        List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryTotalSessionMoreThanOne(req);
+        List<CoreReportBean> cnt = MySQLHelper.getInstance().getChatRecordDao().queryValidNoAcsBussinessNum(req);
         return cnt;
     }
 
