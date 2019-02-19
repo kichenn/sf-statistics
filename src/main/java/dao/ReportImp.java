@@ -164,7 +164,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
                 item.setAcsTotalRate(BigDecimalUtils.divide4Int(item.getAcsSessionNum(), item.getTotalSessionNum()));
                 item.setValidAcsRate(BigDecimalUtils.divide4Int(item.getAcsSessionNum(), item.getValidSessionNum()));
                 item.setNoAcsRate(BigDecimalUtils.divide4Int(item.getNonAcsSessionNum(), item.getTotalSessionNum()));
-                item.setNoAcsValidRate(BigDecimalUtils.divide4Int(item.getValidNoAcsSessionNum(), item.getValidSessionNum()));
+                item.setNoAcsValidRate(BigDecimalUtils.divide4Int(item.getValidNoAcsSessionNum(), item.getValidBusinessSessionNum()));
                 item.setMachineRate(BigDecimal.ONE.subtract(item.getAcsTotalRate()));
             }
 
