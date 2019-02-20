@@ -47,9 +47,11 @@
         SELECT * from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <if test="sessionId != null">
@@ -64,9 +66,11 @@
         SELECT user_q userq,answer,created_time createdTimeStr from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <if test="sessionId != null">
@@ -155,9 +159,11 @@
         select channelId, count(distinct session_id) as totalSessionNum
         from backend_log.chat_record where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -177,9 +183,11 @@
         from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
 
@@ -203,9 +211,11 @@
         from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
 
@@ -228,9 +238,11 @@
         select channelId, count(distinct session_id) as acsSessionNum from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -251,9 +263,11 @@
         select channelId, count(distinct session_id) as validNoAcsSessionNum
         from backend_log.chat_record where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         and app_id = 'csbot'
@@ -278,9 +292,11 @@
         (select channelId, session_id, sum( case when module = 'ACS' then 1 else 0 end ) as hitAcs
         from backend_log.chat_record where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         and app_id = 'csbot'
@@ -304,9 +320,11 @@
         from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
 
@@ -330,9 +348,11 @@
         from backend_log.chat_record where 1=1
         -- where user_q != 'welcome_tag'
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -357,9 +377,11 @@
         from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -415,9 +437,11 @@
         from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -479,9 +503,11 @@
         from backend_log.chat_record a
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and a.created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and a.created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -507,9 +533,11 @@
         select channelId,count(id) totalRound from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -530,9 +558,11 @@
         select channelId,count(id) faqMissNum from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -554,9 +584,11 @@
         from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
@@ -580,9 +612,11 @@
         from backend_log.chat_record
         where 1=1
         <if test="beginDate != null">
+            and day_of_year >= dayofyear(#{beginDate})
             and created_time >= #{beginDate}
         </if>
         <if test="endDate != null">
+            and day_of_year <![CDATA[  <= ]]> dayofyear(#{endDate})
             and created_time <![CDATA[  <= ]]> #{endDate}
         </if>
         <choose>
