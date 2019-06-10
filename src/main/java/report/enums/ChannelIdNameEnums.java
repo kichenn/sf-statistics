@@ -35,6 +35,7 @@ public enum ChannelIdNameEnums {
     channelId840("840", "CCS5"),
     channelId434("434", "COS"),
     channelId972("972", "月结管家"),
+    channelId854("854", "COS引流(无机器人)"),
     channelId9999("9999", "未知"),
     channelId4test("qatest", "qatest");
 
