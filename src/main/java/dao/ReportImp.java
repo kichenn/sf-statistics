@@ -178,6 +178,7 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
             e.printStackTrace();
             LoggerFactory.getLogger().error("Connection with MySQL failed.");
             LoggerFactory.getLogger().error(e);
+            return null;
         }
         return totalSessionReportBeanList;
     }

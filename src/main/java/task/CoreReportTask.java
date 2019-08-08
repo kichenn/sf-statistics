@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class CoreReportTask extends TimerTask {
     private static final int PERIOD_DAY = 24 * 60 * 60 * 1000;
@@ -32,10 +33,20 @@ public class CoreReportTask extends TimerTask {
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
         Date yestoday = calendar.getTime();
 
-        String data = RedisCache.INSTANCE.get(CoreReportTask.generateKey(yestoday));
 
-        if (StringUtil.isBlank(data)) {
-            doQueryDayReport(yestoday);
+        for (int i = 0; i < 20; i ++) {
+            String data = RedisCache.INSTANCE.get(CoreReportTask.generateKey(yestoday));
+            if (StringUtil.isBlank(data)) {
+                try {
+                    TimeUnit.MINUTES.sleep(5);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                doQueryDayReport(yestoday);
+            } else {
+                break;
+            }
+
         }
         RedisCache.INSTANCE.releaseDistributedLock(getClass().getSimpleName(), "");
 
