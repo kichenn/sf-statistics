@@ -116,6 +116,11 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
         try {
             totalSessionReportBeanList = calculateTotalSessionNum(dateBeginStr, dateEndStr, targetChannels);
 
+            totalSessionReportBeanList.stream().forEach(item -> {
+                item.setDateBegin(dateBeginStr);
+                item.setDateEnd(dateEndStr);
+            });
+
             List<CoreReportBean> validSessionReportBeanList = calculateValidSession(dateBeginStr, dateEndStr, targetChannels);
             for (CoreReportBean item : totalSessionReportBeanList) {
                 CoreReportBean tmp = getBeanByChannelId(validSessionReportBeanList, item.getChannelId());
@@ -167,11 +172,6 @@ public class ReportImp extends JdbcDaoSupport implements IReportDao {
                 item.setNoAcsValidRate(BigDecimalUtils.divide4Int(item.getValidNoAcsSessionNum(), item.getValidBusinessSessionNum()));
                 item.setMachineRate(BigDecimal.ONE.subtract(item.getAcsTotalRate()));
             }
-
-            totalSessionReportBeanList.stream().forEach(item -> {
-                item.setDateBegin(dateBeginStr);
-                item.setDateEnd(dateEndStr);
-            });
 
 
         } catch (Exception e) {
