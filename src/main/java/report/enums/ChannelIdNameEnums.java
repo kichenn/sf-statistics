@@ -31,6 +31,7 @@ public enum ChannelIdNameEnums {
     channelId719("719", "短信服务厅_丰发"),
     channelId861("861", "速运APP_丰发"),
     channelId540("540", "速运官网_托寄物"),
+    channelId207("207", "财务小当家"),
     channelId301("301", "小程序(投诉)_丰发"),
     channelId840("840", "CCS5"),
     channelId434("434", "COS"),
