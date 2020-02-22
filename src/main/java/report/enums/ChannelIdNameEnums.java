@@ -35,7 +35,10 @@ public enum ChannelIdNameEnums {
     channelId301("301", "小程序(投诉)_丰发"),
     channelId840("840", "CCS5"),
     channelId434("434", "COS"),
-    channelId972("972", "月结管家"),
+    channelId972("972", "月结公众号"),
+    channelId390("390", "月结PC"),
+    channelId771("771", "公众号查快递"),
+    channelId343("343", "小程序查快递"),
     channelId854("854", "COS引流(无机器人)"),
     channelId9999("9999", "未知"),
     channelId4test("qatest", "qatest");

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ReportImp extends JdbcDaoSupport implements IReportDao {
     private static final String DAY_BEGIN_POINT_FORMAT = "yyyy-MM-dd 00:00:00";
-    private static final String DAY_END_POINT_FORMAT = "yyyy-MM-dd 59:59:59";
+    private static final String DAY_END_POINT_FORMAT = "yyyy-MM-dd 23:59:59";
     private static final Gson GSON = new Gson();
 //    private static final String TABLE_NAME = "chat_record";
 //    private static final String welcomeTag = "@system:welcome_words@";
