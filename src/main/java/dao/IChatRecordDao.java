@@ -1,5 +1,6 @@
 package dao;
 
+import channel.bean.ChannelPo;
 import org.mybatis.spring.annotation.MapperScan;
 import report.bean.*;
 
@@ -11,6 +12,8 @@ import java.util.Map;
  */
 @MapperScan
 public interface IChatRecordDao {
+
+
 
     List<TaskEngineInfoDomain> queryAllScenarioInfo();
 
