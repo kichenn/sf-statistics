@@ -23,7 +23,7 @@ public class ConsulClientUtils {
 
     static{
         ConfigManager configManager = ConfigManagedService.INSTANCE.getConfig();
-        consulUrl = configManager.getStr(Constants.CONSUL_HOST);
+        consulUrl = configManager.getStr(Constants.CONSUL_URL);
         consulPort = configManager.getInteger(Constants.CONSUL_PORT);
         channelKey = configManager.getStr(Constants.CONSUL_CHANNEL_KEY);
         consulClient = new ConsulClient(consulUrl,consulPort);
