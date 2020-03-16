@@ -21,11 +21,13 @@
         <typeAlias type="report.bean.SessionDetailItemDto" alias="SessionDetailItemDto"/>
         <typeAlias type="report.bean.TaskEngineInfoDomain" alias="TaskEngineInfoDomain"/>
         <typeAlias type="report.bean.RobotChannelStatisticsBean" alias="RobotChannelStatisticsBean"/>
+        <typeAlias type="channel.bean.ChannelPo" alias="ChannelPo"/>
     </typeAliases>
 
     <!-- 加载映射文件 -->
     <mappers>
         <mapper resource="sqlMap/ChatRecordDao.xml"/>
         <mapper resource="sqlMap/RobotChannelStatisticsDao.xml"/>
+        <mapper resource="sqlMap/ChannelManageDao.xml"/>
     </mappers>
 </configuration>

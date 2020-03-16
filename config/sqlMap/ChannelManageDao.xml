@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ChannelManageDao">
+
+    <resultMap id="SelectChannelMapping" type="ChannelPo">
+        <id column="id" property="id" javaType="Integer"/>
+        <result column="channel_id" property="channelId" javaType="String"/>
+        <result column="channel_name" property="channelName" javaType="String"/>
+        <result column="status" property="status" javaType="Integer"/>
+         <result column="create_time" property="createTime" javaType="Date" jdbcType="TIMESTAMP"/>
+         <result column="modify_time" property="modifyTime" javaType="Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="addChannel" parameterType="ChannelPo" >
+        INSERT IGNORE INTO backend_log.channel_manage(CHANNEL_ID,CHANNEL_NAME,STATUS) VALUES(#{channelId},#{channelName},#{status})
+    </insert>
+
+    <select id="listAllChannel" resultType="ChannelPo" resultMap="SelectChannelMapping" flushCache="true" useCache="false">
+        SELECT * FROM backend_log.channel_manage
+    </select>
+
+    <select id="listActiveChannel" resultType="ChannelPo" resultMap="SelectChannelMapping" flushCache="true" useCache="false">
+        SELECT * FROM backend_log.channel_manage WHERE STATUS = 1
+    </select>
+
+    <update id="updateChannel"  parameterType="ChannelPo">
+        UPDATE backend_log.channel_manage
+        <trim prefix="set" suffixOverrides=",">
+            <if test="id!=null">ID=#{id},</if>
+            <if test="channelName!=null">CHANNEL_NAME=#{channelName},</if>
+            <if test="status!=null">STATUS=#{status},</if>
+            <if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+            <if test="modifyTime!=null">MODIFY_TIME=#{modifyTime},</if>
+        </trim>
+        WHERE CHANNEL_ID=#{channelId}
+    </update>
+
+
+</mapper>

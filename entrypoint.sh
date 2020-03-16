@@ -44,6 +44,9 @@ echo "actUrl=$EC_ACT_URL" >> $configfile
 
 echo "consulHost=$EC_CONSUL_HOST" >> $configfile
 echo "consulKeyPrefix=$EC_CONSUL_KEY_PREFIX" >> $configfile
+echo "consulUrl=$STATISTIC_CONSUL_URL" >> $configfile
+echo "consulPort=$STATISTIC_CONSUL_PORT" >> $configfile
+echo "consulChannelKey=$STATISTIC_CONSUL_CHANNELKEY" >> $configfile
 
 echo "redisHost=$EC_REDIS_HOST" >> $configfile
 echo "redisPort=$EC_REDIS_PORT" >> $configfile

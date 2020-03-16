@@ -1,5 +1,6 @@
 package report;
 
+import dao.IChatRecordDao;
 import log.LoggerFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;

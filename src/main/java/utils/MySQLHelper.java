@@ -25,6 +25,7 @@ public enum MySQLHelper {
 
     private final IRobotChannelStatisticsDao iRobotChannelStatisticsDao = getRobotChannelStatisticsDaoInner();
 
+    private final ChannelManageDao channelManageDao = initChannelManageDao();
 
 
     public static MySQLHelper getInstance() {
@@ -51,8 +52,17 @@ public enum MySQLHelper {
         return INSTANCE.iChatRecordDao;
     }
 
-    public IRobotChannelStatisticsDao getRobotChannelStatisticsDao(){
+    public IRobotChannelStatisticsDao getRobotChannelStatisticsDao() {
         return INSTANCE.iRobotChannelStatisticsDao;
     }
-}
 
+    public ChannelManageDao initChannelManageDao() {
+        SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean("sqlSessionFactory");
+        SqlSession session = sqlSessionFactory.openSession();
+        return session.getMapper(ChannelManageDao.class);
+    }
+
+    public ChannelManageDao getChannelManageDao(){
+        return INSTANCE.channelManageDao;
+    }
+}

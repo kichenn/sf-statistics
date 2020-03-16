@@ -1,5 +1,8 @@
 
+import channel.bean.BaseResult;
+import channel.ChannelManageRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import config.ConfigManagedService;
 import config.ConfigManager;
 import config.Constants;
@@ -117,7 +120,7 @@ public class ControllerServlet {
 
                 FaqIndexApiRequest reportApiRequest = new FaqIndexApiRequest(request);
                 reportApiRequest.process(request, response);
-            } else if (request.getRequestURI().equals(ReportApiRequest.listEntryPoint)) {
+            } else if (request.getRequestURI().equals(ReportApiRequest.listEntryPoint)) {       // 2会话数据统计
 
                 ReportApiRequest reportApiRequest = new ReportApiRequest(request);
                 ReportResult reportResult = reportApiRequest.list();
@@ -127,7 +130,7 @@ public class ControllerServlet {
                 ReportApiRequest reportApiRequest = new ReportApiRequest(request);
                 reportApiRequest.list4download(response);
 
-            } else if (request.getRequestURI().equals(ReportSatisfactionApiRequest.listEntryPoint)) {
+            } else if (request.getRequestURI().equals(ReportSatisfactionApiRequest.listEntryPoint)) {   //1满意度评价统计
 
                 ReportSatisfactionApiRequest reportApiRequest = new ReportSatisfactionApiRequest(request);
                 ReportResult reportResult = reportApiRequest.list();
@@ -149,7 +152,17 @@ public class ControllerServlet {
                 RobotChannelStatistics robotChannelStatistics = new RobotChannelStatistics(request);
                 List<RobotChannelStatisticsBean> list = robotChannelStatistics.list();
                 setResponseInfo(response, new Gson().toJson(list));
-            } else {
+            } else if(request.getRequestURI().equals(ChannelManageRequest.listAllChannelPoint)) {
+                ChannelManageRequest channelManageRequeset = new ChannelManageRequest();
+                BaseResult baseResult = channelManageRequeset.listAllChannel(request);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                setResponseInfo(response, gson.toJson(baseResult));
+            }else if(request.getRequestURI().equals(ChannelManageRequest.listActiveChannelPoint)) {
+                ChannelManageRequest channelManageRequeset = new ChannelManageRequest();
+                BaseResult baseResult = channelManageRequeset.listActiveChannel(request);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                setResponseInfo(response, gson.toJson(baseResult));
+            }else {
                 setResponseInfo(response, otherAPIUrl(), "text/html;charset=utf-8");
             }
             return;
@@ -164,7 +177,15 @@ public class ControllerServlet {
             if (request.getRequestURI().equals("/_health_check")) {
                 healthCheck(response);
                 return;
-            } else {
+            } else if(request.getRequestURI().equals(ChannelManageRequest.addChannelPoint)) {
+                ChannelManageRequest channelManageRequeset = new ChannelManageRequest();
+                BaseResult baseResult = channelManageRequeset.addChannel(request);
+                setResponseInfo(response, new Gson().toJson(baseResult));
+            }else if(request.getRequestURI().equals(ChannelManageRequest.updateChannelPoint)) {
+                ChannelManageRequest channelManageRequeset = new ChannelManageRequest();
+                BaseResult baseResult = channelManageRequeset.updateChannel(request);
+                setResponseInfo(response, new Gson().toJson(baseResult));
+            }else {
                 setResponseInfo(response, otherAPIUrl(), "text/html;charset=utf-8");
                 return;
             }
