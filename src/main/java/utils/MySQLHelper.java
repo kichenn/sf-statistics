@@ -23,6 +23,8 @@ public enum MySQLHelper {
 
     private final IChatRecordDao iChatRecordDao = getChatRecordDaoInner();
 
+    private final IRobotChannelStatisticsDao iRobotChannelStatisticsDao = getRobotChannelStatisticsDaoInner();
+
 
 
     public static MySQLHelper getInstance() {
@@ -39,8 +41,18 @@ public enum MySQLHelper {
         return session.getMapper(IChatRecordDao.class);
     }
 
+    private IRobotChannelStatisticsDao getRobotChannelStatisticsDaoInner() {
+        SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean("sqlSessionFactory");
+        SqlSession session = sqlSessionFactory.openSession();
+        return session.getMapper(IRobotChannelStatisticsDao.class);
+    }
+
     public IChatRecordDao getChatRecordDao() {
         return INSTANCE.iChatRecordDao;
+    }
+
+    public IRobotChannelStatisticsDao getRobotChannelStatisticsDao(){
+        return INSTANCE.iRobotChannelStatisticsDao;
     }
 }
 

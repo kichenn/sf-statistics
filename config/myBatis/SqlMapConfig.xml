@@ -20,10 +20,12 @@
         <typeAlias type="report.bean.FaqIndexReportDto" alias="FaqIndexReportDto"/>
         <typeAlias type="report.bean.SessionDetailItemDto" alias="SessionDetailItemDto"/>
         <typeAlias type="report.bean.TaskEngineInfoDomain" alias="TaskEngineInfoDomain"/>
+        <typeAlias type="report.bean.RobotChannelStatisticsBean" alias="RobotChannelStatisticsBean"/>
     </typeAliases>
 
     <!-- 加载映射文件 -->
     <mappers>
         <mapper resource="sqlMap/ChatRecordDao.xml"/>
+        <mapper resource="sqlMap/RobotChannelStatisticsDao.xml"/>
     </mappers>
 </configuration>

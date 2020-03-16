@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.IRobotChannelStatisticsDao">
+
+    <resultMap id="statisticsMapping" type="RobotChannelStatisticsBean">
+        <id column="id" property="id" javaType="long"/>
+        <result column="app_id" property="appId" javaType="String"/>
+        <result column="channel_id" property="channelId" javaType="String"/>
+        <result column="channel_name" property="channelName" javaType="String"/>
+        <result column="created_time" property="createdTime" javaType="Date"/>
+        <result column="update_time" property="updateTime" javaType="Date"/>
+    </resultMap>
+
+
+    <select id="queryRobotChannelStatistics" resultMap="statisticsMapping">
+        select id,app_id,channel_id,created_time,update_time from backend_log.t_robot_channel_statistics
+    </select>
+
+    <insert id="addRobotChannel" parameterType="Map">
+      insert into backend_log.t_robot_channel_statistics(app_id,channel_id,created_time,update_time)
+      values(#{appId},#{channelId},#{createdTime},#{updateTime}) ON DUPLICATE KEY UPDATE update_time=now()
+    </insert>
+
+    <select id="queryRobotChannelList" resultMap="statisticsMapping" parameterType="Map">
+        select app_id, channel.channel_id, channel.channel_name
+        from backend_log.t_robot_channel_statistics stat, backend_log.channel_manage channel
+        where app_id = #{appId} and stat.channel_id = channel.channel_id order by stat.created_time asc
+    </select>
+</mapper>

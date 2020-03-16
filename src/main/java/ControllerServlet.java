@@ -9,8 +9,10 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import report.*;
 import report.bean.ReportResult;
+import report.bean.RobotChannelStatisticsBean;
 import staticPart.RedisCache;
 import staticPart.ThreadPool;
+import statistics.RobotChannelStatistics;
 import task.TimerManager;
 
 import javax.servlet.ServletException;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by yuao on 11/9/17.
@@ -138,6 +141,14 @@ public class ControllerServlet {
 
                 SessionDetailRequest reportApiRequest = new SessionDetailRequest(request);
                 reportApiRequest.process(request, response);
+            } else if (request.getRequestURI().equals(RobotChannelStatistics.entryPoint)) {
+                RobotChannelStatistics robotChannelStatistics = new RobotChannelStatistics(request);
+                robotChannelStatistics.statistics();
+                setResponseInfo(response, "success");
+            }  else if (request.getRequestURI().equals(RobotChannelStatistics.listEntryPoint)) {
+                RobotChannelStatistics robotChannelStatistics = new RobotChannelStatistics(request);
+                List<RobotChannelStatisticsBean> list = robotChannelStatistics.list();
+                setResponseInfo(response, new Gson().toJson(list));
             } else {
                 setResponseInfo(response, otherAPIUrl(), "text/html;charset=utf-8");
             }
