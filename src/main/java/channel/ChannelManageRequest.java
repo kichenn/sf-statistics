@@ -17,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import utils.ConsulClientUtils;
 import utils.MySQLHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,7 @@ public class ChannelManageRequest {
         this.status = request.getParameter("status");
     }
 
+    @Transactional
     public BaseResult addChannel(HttpServletRequest request) {
         initParams(request);
         if (!isValidChannelRequest()) {
@@ -55,8 +57,13 @@ public class ChannelManageRequest {
         line = MySQLHelper.getInstance().getChannelManageDao().addChannel(channelPo);
 
         if (line > 0) {
-            LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
-            return new BaseResult(BaseResultEnums.SUCCESS);
+            boolean consulResult = ConsulClientUtils.addChannel(channelPo);
+            if(consulResult){
+                LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
+                return new BaseResult(BaseResultEnums.SUCCESS);
+            }else {
+                return new BaseResult(BaseResultEnums.HANDLE_CONSUL_ERROR);
+            }
         } else {
             return new BaseResult(BaseResultEnums.UNIQUE_ID);
         }
@@ -110,11 +117,18 @@ public class ChannelManageRequest {
         channelPo.setChannelName(this.channelName);
         channelPo.setStatus(Integer.parseInt(this.status));
         Long line = MySQLHelper.INSTANCE.getChannelManageDao().updateChannel(channelPo);
+
         if (line > 0) {
-            LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
-            return new BaseResult(BaseResultEnums.SUCCESS);
+            boolean consulResult = ConsulClientUtils.updateChannel(channelPo);
+            if(consulResult){
+                LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
+                return new BaseResult(BaseResultEnums.SUCCESS);
+            }else {
+                return new BaseResult(BaseResultEnums.HANDLE_CONSUL_ERROR);
+            }
         } else {
-            return new BaseResult(BaseResultEnums.SERVER_ERROR);
+            return new BaseResult(BaseResultEnums.EXIST_ID);
         }
     }
+
 }

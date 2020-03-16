@@ -66,6 +66,8 @@ public interface Constants {
     String REDIS_PASSWORD = "redisPassword";
     
     String CONSUL_HOST = "consulHost";
+    String CONSUL_PORT = "consulPort";
+    String CONSUL_CHANNEL_KEY = "consulChannelKey";
     String CONSUL_KEY_PREFIX = "consulKeyPrefix";
     
 
