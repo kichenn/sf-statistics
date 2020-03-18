@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ConsulClientUtils {
 
-    private static String consulUrl = "172.16.0.1";
+    private static String consulUrl = "172.17.0.1";
     private static Integer consulPort = 8500;
     private static String channelKey = "idc/setting/teInfo";
     private static ConsulClient consulClient = new ConsulClient(consulUrl,consulPort);
@@ -37,6 +37,7 @@ public class ConsulClientUtils {
         Response<Boolean> booleanResponse = consulClient.setKVValue(channelKey, JSONArray.toJSONString(channelPos));
         return booleanResponse.getValue();
     }
+
 
     public static boolean updateChannel(ChannelPo channelPo) {
         String value = consulClient.getKVValue(channelKey).getValue().getDecodedValue();

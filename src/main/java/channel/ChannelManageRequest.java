@@ -57,8 +57,7 @@ public class ChannelManageRequest {
         line = MySQLHelper.getInstance().getChannelManageDao().addChannel(channelPo);
 
         if (line > 0) {
-            boolean consulResult = ConsulClientUtils.addChannel(channelPo);
-            if(consulResult){
+            if(ConsulClientUtils.addChannel(channelPo)){
                 LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
                 return new BaseResult(BaseResultEnums.SUCCESS);
             }else {
@@ -67,19 +66,6 @@ public class ChannelManageRequest {
         } else {
             return new BaseResult(BaseResultEnums.UNIQUE_ID);
         }
-    }
-
-    public boolean isValidChannelRequest() {
-        if (StringUtils.isBlank(this.channelId)) {
-            return false;
-        }
-        if (StringUtils.isBlank(this.channelName)) {
-            return false;
-        }
-        if (StringUtils.isBlank(this.status) || (!this.status.equals("0") && !this.status.equals("1"))) {
-            return false;
-        }
-        return true;
     }
 
     public BaseResult listAllChannel(HttpServletRequest request) {
@@ -92,8 +78,15 @@ public class ChannelManageRequest {
             return new BaseResult(BaseResultEnums.SERVER_ERROR);
         }
 
+
+
     }
 
+    /**
+     * list所有已启用渠道
+     * @param request
+     * @return
+     */
     public BaseResult listActiveChannel(HttpServletRequest request) {
         List<ChannelPo> channelList = MySQLHelper.INSTANCE.getChannelManageDao().listActiveChannel();
         if (!CollectionUtils.isEmpty(channelList)) {
@@ -105,6 +98,11 @@ public class ChannelManageRequest {
         }
     }
 
+    /**
+     * 注：channalId数据库唯一，不可更新
+     * @param request
+     * @return
+     */
     @Transactional
     public BaseResult updateChannel(HttpServletRequest request) {
         initParams(request);
@@ -119,8 +117,7 @@ public class ChannelManageRequest {
         Long line = MySQLHelper.INSTANCE.getChannelManageDao().updateChannel(channelPo);
 
         if (line > 0) {
-            boolean consulResult = ConsulClientUtils.updateChannel(channelPo);
-            if(consulResult){
+            if(ConsulClientUtils.updateChannel(channelPo)){
                 LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
                 return new BaseResult(BaseResultEnums.SUCCESS);
             }else {
@@ -129,6 +126,21 @@ public class ChannelManageRequest {
         } else {
             return new BaseResult(BaseResultEnums.EXIST_ID);
         }
+    }
+
+
+
+    public boolean isValidChannelRequest() {
+        if (StringUtils.isBlank(this.channelId)) {
+            return false;
+        }
+        if (StringUtils.isBlank(this.channelName)) {
+            return false;
+        }
+        if (StringUtils.isBlank(this.status) || (!this.status.equals("0") && !this.status.equals("1"))) {
+            return false;
+        }
+        return true;
     }
 
 }
