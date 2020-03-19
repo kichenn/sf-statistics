@@ -19,9 +19,9 @@ public class ConsulClientUtils {
     private static String consulUrl = "172.17.0.1";
     private static Integer consulPort = 8500;
     private static String channelKey = "idc/setting/teInfo";
-    private static ConsulClient consulClient = new ConsulClient(consulUrl,consulPort);
+    private static ConsulClient consulClient = null;
 
-    static{
+    public static void initConsulParams(){
         ConfigManager configManager = ConfigManagedService.INSTANCE.getConfig();
         consulUrl = configManager.getStr(Constants.CONSUL_URL);
         consulPort = configManager.getInteger(Constants.CONSUL_PORT);
@@ -29,8 +29,20 @@ public class ConsulClientUtils {
         consulClient = new ConsulClient(consulUrl,consulPort);
     }
 
+    public static ConsulClient getConsulClient(){
+        if(consulClient == null) {
+            synchronized (ConsulClientUtils.class) {
+                if(consulClient == null) {
+                    initConsulParams();
+                }
+            }
+        }
+        return consulClient;
+    }
+
+
     public static boolean addChannel(ChannelPo channelPo) {
-        String value = consulClient.getKVValue(channelKey).getValue().getDecodedValue();
+        String value = getConsulClient().getKVValue(channelKey).getValue().getDecodedValue();
         List<ChannelPo> channelPos = JSONArray.parseArray(value, ChannelPo.class);
         channelPo.setStatus(null);
         channelPos.add(channelPo);
@@ -40,7 +52,7 @@ public class ConsulClientUtils {
 
 
     public static boolean updateChannel(ChannelPo channelPo) {
-        String value = consulClient.getKVValue(channelKey).getValue().getDecodedValue();
+        String value = getConsulClient().getKVValue(channelKey).getValue().getDecodedValue();
         List<ChannelPo> channelPos = JSONArray.parseArray(value, ChannelPo.class);
         channelPos.forEach(e -> {
             if (e.getChannelId().equals(channelPo.getChannelId())) {

@@ -18,7 +18,7 @@
     </insert>
 
     <select id="listAllChannel" resultType="ChannelPo" resultMap="SelectChannelMapping" flushCache="true" useCache="false">
-        SELECT * FROM backend_log.channel_manage
+        SELECT * FROM backend_log.`channel_manage`  ORDER BY STATUS DESC, CHANNEL_ID+0 ASC;
     </select>
 
     <select id="listActiveChannel" resultType="ChannelPo" resultMap="SelectChannelMapping" flushCache="true" useCache="false">
