@@ -2,8 +2,8 @@ package handler;
 
 import com.google.gson.Gson;
 import org.junit.Test;
-import report.SessionDetailRequest;
 import report.bean.*;
+import report.enums.ChannelIdNameEnums;
 import utils.HandlerUtilities;
 import utils.MySQLHelper;
 
@@ -208,6 +208,14 @@ public class HandlerUtilitiesTest {
     public void switchTest() {
 
 
+    }
+
+    @Test
+    public void testChannelEnum(){
+//        String channelName = ChannelIdNameEnums.getChannelNameById("900");
+//        System.out.println(channelName);
+//        String channelName2 = ChannelIdNameEnums.getChannelNameById("901");
+//        System.out.println(channelName2);
     }
 
 

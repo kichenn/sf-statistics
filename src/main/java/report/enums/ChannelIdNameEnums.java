@@ -1,80 +1,28 @@
 package report.enums;
 
-public enum ChannelIdNameEnums {
-    channelId909("909", "第三方服务窗"),
-    channelId254("254", "IVR引流-12"),
-    channelId745("745", "IVR引流-11"),
-    channelId823("823", "IVR引流-10"),
-    channelId828("828", "IVR引流-09"),
-    channelId234("234", "IVR引流-08"),
-    channelId715("715", "IVR引流-07"),
-    channelId139("139", "IVR引流-06"),
-    channelId215("215", "IVR引流-05"),
-    channelId788("788", "IVR引流-04"),
-    channelId381("381", "IVR引流-03"),
-    channelId498("498", "IVR引流-02"),
-    channelId950("950", "IVR引流-01"),
-    channelId362("362", "微信新版"),
-    channelId610("610", "速运小程序"),
-    channelId758("758", "自助理赔_微信"),
-    channelId717("717", "费用明细渠道_丰发2"),
-    channelId163("163", "投诉结案页面_丰发"),
-    channelId848("848", "微信 WP-丰发"),
-    channelId376("376", "支付宝生活号_丰发2"),
-    channelId594("594", "微信--在线客服_丰发"),
-    channelId166("166", "手机QQ_丰发"),
-    channelId659("659", "速运官网触屏版_丰发"),
-    channelId503("503", "官网会员系统_丰发"),
-    channelId469("469", "速运官网PC端_丰发"),
-    channelId464("464", "支付宝生活号_丰发"),
-    channelId873("873", "H5自助链接_丰发"),
-    channelId719("719", "短信服务厅_丰发"),
-    channelId861("861", "速运APP_丰发"),
-    channelId540("540", "速运官网_托寄物"),
-    channelId207("207", "财务小当家"),
-    channelId301("301", "小程序(投诉)_丰发"),
-    channelId840("840", "CCS5"),
-    channelId434("434", "COS"),
-    channelId972("972", "月结公众号"),
-    channelId390("390", "月结PC"),
-    channelId771("771", "公众号查快递"),
-    channelId343("343", "小程序查快递"),
-    channelId475("475","速打平台"),
-    channelId854("854", "COS引流(无机器人)"),
-    channelId9999("9999", "未知"),
-    channelId4test("qatest", "qatest");
+import channel.bean.ChannelPo;
+import org.springframework.util.CollectionUtils;
+import utils.MySQLHelper;
 
-    private String channelId;
-    private String channelName;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    ChannelIdNameEnums(String channelId, String channelName) {
-        this.channelId = channelId;
-        this.channelName = channelName;
+public class ChannelIdNameEnums {
+    private static Map<String, String> channelMap = new HashMap();
+
+    public static void init() {
+        channelMap.clear();
+        List<ChannelPo> channelList = MySQLHelper.INSTANCE.getChannelManageDao().listActiveChannel();
+        if (!CollectionUtils.isEmpty(channelList)) {
+            channelList.forEach(e -> channelMap.put(e.getChannelId(), e.getChannelName()));
+        }
     }
-
-    public String getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getChannelName() {
-        return channelName;
-    }
-
-    public void setChannelName(String channelName) {
-        this.channelName = channelName;
-    }
-
 
     public static String getChannelNameById(String id) {
-        for (ChannelIdNameEnums item : ChannelIdNameEnums.values()) {
-            if (item.getChannelId().equals(id)) {
-                return item.getChannelName();
-            }
+        if (CollectionUtils.isEmpty(channelMap)) {
+            init();
         }
-        return id;
+        return channelMap.get(id);
     }
 }

@@ -3,20 +3,11 @@ package channel;
 import channel.bean.BaseResult;
 import channel.bean.ChannelPo;
 import channel.enums.BaseResultEnums;
-import config.ConfigManagedService;
-import config.Constants;
-import dao.ChannelManageDao;
-import dao.IChatRecordDao;
 import log.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import report.enums.ChannelIdNameEnums;
 import utils.ConsulClientUtils;
 import utils.MySQLHelper;
 
@@ -58,6 +49,7 @@ public class ChannelManageRequest {
 
         if (line > 0) {
             if(ConsulClientUtils.addChannel(channelPo)){
+                ChannelIdNameEnums.init();
                 LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
                 return new BaseResult(BaseResultEnums.SUCCESS);
             }else {
@@ -118,6 +110,7 @@ public class ChannelManageRequest {
 
         if (line > 0) {
             if(ConsulClientUtils.updateChannel(channelPo)){
+                ChannelIdNameEnums.init();
                 LoggerFactory.getLogger().info(String.format("[%s] output: '%s'", this.getClass().getSimpleName(), "time consume:" + (System.currentTimeMillis() - startTime)));
                 return new BaseResult(BaseResultEnums.SUCCESS);
             }else {
