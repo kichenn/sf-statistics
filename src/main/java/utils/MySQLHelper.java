@@ -12,11 +12,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Created by yuao on 3/11/17.
  */
 public enum MySQLHelper {
+    //
     INSTANCE();
 
     private final String applicationContextPath = ConfigManagedService.getConfig().getStr(Constants.APPLICATION_CONTEXT_PATH);
     private final ApplicationContext applicationContext = new ClassPathXmlApplicationContext(applicationContextPath);
-
+    private final SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean("sqlSessionFactory");
+    private final SqlSession session = sqlSessionFactory.openSession();
 
 
     private final IReportDao reportDao = (IReportDao) applicationContext.getBean("reportDao");
@@ -25,7 +27,7 @@ public enum MySQLHelper {
 
     private final IRobotChannelStatisticsDao iRobotChannelStatisticsDao = getRobotChannelStatisticsDaoInner();
 
-    private final ChannelManageDao channelManageDao = initChannelManageDao();
+    private final ChannelManageDao ichannelManageDao = getChannelManageDaoInner();
 
 
     public static MySQLHelper getInstance() {
@@ -37,15 +39,16 @@ public enum MySQLHelper {
     }
 
     private IChatRecordDao getChatRecordDaoInner() {
-        SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean("sqlSessionFactory");
-        SqlSession session = sqlSessionFactory.openSession();
         return session.getMapper(IChatRecordDao.class);
     }
 
     private IRobotChannelStatisticsDao getRobotChannelStatisticsDaoInner() {
-        SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean("sqlSessionFactory");
-        SqlSession session = sqlSessionFactory.openSession();
         return session.getMapper(IRobotChannelStatisticsDao.class);
+    }
+
+
+    public ChannelManageDao getChannelManageDaoInner() {
+        return session.getMapper(ChannelManageDao.class);
     }
 
     public IChatRecordDao getChatRecordDao() {
@@ -56,13 +59,8 @@ public enum MySQLHelper {
         return INSTANCE.iRobotChannelStatisticsDao;
     }
 
-    public ChannelManageDao initChannelManageDao() {
-        SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean("sqlSessionFactory");
-        SqlSession session = sqlSessionFactory.openSession();
-        return session.getMapper(ChannelManageDao.class);
-    }
 
     public ChannelManageDao getChannelManageDao(){
-        return INSTANCE.channelManageDao;
+        return INSTANCE.ichannelManageDao;
     }
 }
