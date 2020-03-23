@@ -15,13 +15,13 @@ public enum MySQLHelper {
     //
     INSTANCE();
 
-    private final String applicationContextPath = ConfigManagedService.getConfig().getStr(Constants.APPLICATION_CONTEXT_PATH);
-    private final ApplicationContext applicationContext = new ClassPathXmlApplicationContext(applicationContextPath);
-    private final SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean("sqlSessionFactory");
-    private final SqlSession session = sqlSessionFactory.openSession();
+    private static final String applicationContextPath = ConfigManagedService.getConfig().getStr(Constants.APPLICATION_CONTEXT_PATH);
+    private static final ApplicationContext applicationContext = new ClassPathXmlApplicationContext(applicationContextPath);
+    private static final SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean("sqlSessionFactory");
+    private static final SqlSession session = sqlSessionFactory.openSession();
 
 
-    private final IReportDao reportDao = (IReportDao) applicationContext.getBean("reportDao");
+    private static final IReportDao reportDao = (IReportDao) applicationContext.getBean("reportDao");
 
     private final IChatRecordDao iChatRecordDao = getChatRecordDaoInner();
 
@@ -34,7 +34,7 @@ public enum MySQLHelper {
         return INSTANCE;
     }
 
-    public IReportDao getReportDao() {
+    public static IReportDao getReportDao() {
         return INSTANCE.reportDao;
     }
 

@@ -31,6 +31,17 @@
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.4" level="project" />
     <orderEntry type="library" name="Maven: com.mchange:c3p0:0.9.5-pre10" level="project" />
     <orderEntry type="library" name="Maven: com.mchange:mchange-commons-java:0.2.8" level="project" />
+    <orderEntry type="library" name="Maven: net.jodah:expiringmap:0.5.8" level="project" />
+    <orderEntry type="library" name="Maven: com.emotibot:emotibot-module-core:1.13.9.ubt-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.emotibot:configclient:1.0.0-vip-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.retrofit2:retrofit:2.4.0" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.10.0" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.14.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.2" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.retrofit2:converter-gson:2.4.0" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.4" level="project" />
+    <orderEntry type="library" name="Maven: com.mchange:c3p0:0.9.5-pre10" level="project" />
+    <orderEntry type="library" name="Maven: com.mchange:mchange-commons-java:0.2.8" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis-spring:1.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi:3.14" level="project" />
@@ -60,11 +71,9 @@
     <orderEntry type="library" name="Maven: com.squareup.retrofit2:retrofit:2.4.0" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.10.0" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.14.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.2" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.retrofit2:converter-gson:2.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
     <orderEntry type="library" name="Maven: com.datadoghq:java-dogstatsd-client:2.2" level="project" />
-    <orderEntry type="library" name="Maven: com.ecwid.consul:consul-api:1.2.1" level="project" />
     <orderEntry type="library" name="Maven: com.opencsv:opencsv:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.1" level="project" />
@@ -119,7 +128,7 @@
     <orderEntry type="module-library">
       <library name="Maven: jdk.tools:jdk.tools:1.6">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_65/lib/tools.jar!/" />
+          <root url="jar://D:/Development Files/Java/jdk1.8.0_65/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -151,5 +160,7 @@
     <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:5.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.timgroup:java-statsd-client:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.ben-manes.caffeine:caffeine:2.5.5" level="project" />
+    <orderEntry type="library" name="Maven: com.ecwid.consul:consul-api:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.2" level="project" />
   </component>
 </module>
